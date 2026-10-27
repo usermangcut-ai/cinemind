@@ -1,0 +1,18 @@
+# phụ thuộc / build
+node_modules/
+dist/
+backend/.venv/
+__pycache__/
+*.pyc
+
+# bí mật
+.env*
+!.env.example
+
+# dữ liệu tải về, cache vector, log (tạo lại bằng etl/*.py)
+backend/data/
+*.log
+
+# tài liệu bàn giao nội bộ cho AI (không đưa lên repo)
+CLAUDE.md
+AGENTS.md

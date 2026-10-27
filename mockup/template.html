@@ -1,0 +1,891 @@
+<title>CineMind</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: một rạp chiếu tối — landing kể chuyện, app 3 cột (lịch sử | chat | top 10), poster vẽ bằng CSS */
+:root {
+  --bg: #110d13; --panel: #18131b; --panel-2: #211a25; --line: #30273a;
+  --fg: #f4ede4; --muted: #a497a6; --dim: #6f6373;
+  --accent: #f2a14a; --accent-ink: #1d1206; --accent-soft: rgba(242,161,74,.14);
+  --good: #86cfa8; --danger: #ef7a6c;
+  --display: 'Bricolage Grotesque', 'Be Vietnam Pro', system-ui, sans-serif;
+  --body: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  --r: 12px; --top: 60px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.6 var(--body); -webkit-font-smoothing: antialiased; }
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+h1, h2, h3 { line-height: 1.1; font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -.02em; }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.eyebrow { font: 500 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .12em; color: var(--accent); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: 999px; font-weight: 600; font-size: 14px; transition: transform .15s, background .15s, border-color .15s; white-space: nowrap; }
+.btn:active { transform: scale(.97); }
+.btn-primary { background: var(--accent); color: var(--accent-ink); }
+.btn-primary:hover { background: #f7b46a; }
+.btn-ghost { border: 1px solid var(--line); color: var(--fg); }
+.btn-ghost:hover { border-color: var(--muted); }
+.btn-sm { padding: 6px 12px; font-size: 13px; }
+.btn[disabled] { opacity: .35; pointer-events: none; }
+.icon-btn { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 10px; color: var(--muted); }
+.icon-btn:hover { background: var(--panel-2); color: var(--fg); }
+svg.i { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* ---------- Poster vẽ bằng CSS ---------- */
+.poster { container-type: inline-size; position: relative; aspect-ratio: 2/3; max-width: 100%; border-radius: 8px; overflow: hidden; flex: none;
+  background: radial-gradient(circle at 72% 22%, hsl(var(--h) 85% 62% / .6), transparent 46%), linear-gradient(165deg, hsl(var(--h) 48% 32%), hsl(calc(var(--h) + 28) 42% 9%));
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); color: #fff; display: block; }
+.poster::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 3px); }
+.poster::after { content: ''; position: absolute; width: 62cqi; aspect-ratio: 1; right: -14cqi; top: 10cqi; border-radius: 50%; border: 1.5cqi solid hsl(var(--h) 90% 75% / .35); }
+.poster img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; }
+.rank .poster img, .simitem .poster img { display: block; }
+.poster .p-year { position: absolute; top: 8cqi; left: 9cqi; font: 500 clamp(7px, 7cqi, 13px) var(--mono); opacity: .75; }
+.poster .p-cap { position: absolute; left: 9cqi; right: 9cqi; bottom: 9cqi; z-index: 1; display: grid; gap: 4cqi; }
+.poster .p-title { font: 800 clamp(7px, var(--fs, 14cqi), 34px)/.95 var(--display); text-transform: uppercase; letter-spacing: -.02em; overflow-wrap: break-word; hyphens: auto; }
+.poster .p-dir { font: 500 clamp(6px, 6.5cqi, 12px) var(--mono); opacity: .7; text-transform: uppercase; }
+
+/* ---------- Views ---------- */
+.view { min-height: 100%; }
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; height: var(--top); display: flex; align-items: center; gap: 12px; padding-inline: 16px; background: rgba(17,13,19,.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.logo { display: flex; align-items: center; gap: 9px; font: 800 19px var(--display); letter-spacing: -.03em; color: var(--fg); }
+.logo-mark { width: 26px; height: 26px; border-radius: 7px; background: conic-gradient(from 200deg, var(--accent), #e8576b, var(--accent)); display: grid; place-items: center; }
+.logo-mark::after { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); }
+.nav { display: flex; gap: 4px; margin-left: 12px; }
+.nav button { padding: 7px 14px; border-radius: 999px; color: var(--muted); font-weight: 500; font-size: 14px; }
+.nav button.on { background: var(--panel-2); color: var(--fg); }
+.count { font: 500 11px var(--mono); background: var(--accent-soft); color: var(--accent); padding: 1px 7px; border-radius: 99px; margin-left: 4px; }
+.spacer { flex: 1; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), #e8576b); color: var(--accent-ink); display: grid; place-items: center; font-weight: 700; font-size: 13px; }
+.user-chip { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+
+/* ---------- Landing ---------- */
+#v-landing .topbar { background: transparent; border: 0; backdrop-filter: none; position: absolute; left: 0; right: 0; }
+.hero { position: relative; overflow: hidden; padding: calc(var(--top) + 56px) 16px 0; }
+.hero::before { content: ''; position: absolute; inset: -20% -10% auto; height: 620px; background: radial-gradient(ellipse at 30% 20%, rgba(242,161,74,.22), transparent 55%), radial-gradient(ellipse at 85% 10%, rgba(232,87,107,.16), transparent 50%); pointer-events: none; }
+.hero-in { position: relative; max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+.hero h1 { font-size: clamp(40px, 6.2vw, 78px); line-height: .98; font-weight: 800; letter-spacing: -.045em; margin-top: 18px; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero p.lead { font-size: 18px; color: var(--muted); max-width: 520px; margin: 22px 0 28px; }
+.ask { display: flex; gap: 8px; padding: 8px; border-radius: 18px; background: var(--panel); border: 1px solid var(--line); max-width: 560px; box-shadow: 0 20px 60px -20px rgba(0,0,0,.6); }
+.ask input { flex: 1; min-width: 0; background: none; border: 0; outline: 0; padding: 0 12px; font-size: 16px; }
+.ask input::placeholder { color: var(--dim); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { padding: 7px 13px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); font-size: 13px; transition: .15s; }
+.chip:hover { border-color: var(--accent); color: var(--fg); }
+.hero .chips { margin-top: 16px; max-width: 560px; }
+.preview { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 20px; display: grid; gap: 14px; box-shadow: 0 40px 100px -30px rgba(0,0,0,.8); transform: rotate(1.2deg); }
+.preview .bubble-u { justify-self: end; }
+.strip { margin-top: 72px; display: flex; gap: 14px; width: max-content; animation: marquee 70s linear infinite; padding-bottom: 8px; }
+.strip .poster { width: 132px; opacity: .55; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+.section { max-width: 1180px; margin: 0 auto; padding: 96px 16px 0; }
+.section h2 { font-size: clamp(30px, 4vw, 46px); font-weight: 800; margin: 14px 0 12px; max-width: 760px; }
+.section > p { color: var(--muted); max-width: 620px; font-size: 17px; margin: 0; }
+.steps-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; margin-top: 40px; }
+.step-card { background: var(--panel); padding: 28px; display: grid; gap: 10px; align-content: start; }
+.feats { grid-template-columns: repeat(4, 1fr); }
+.ic-sq { width: 38px; height: 38px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; }
+.step-card .n { font: 500 13px var(--mono); color: var(--accent); }
+.step-card h3 { font-size: 21px; }
+.step-card p { margin: 0; color: var(--muted); font-size: 14.5px; }
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; margin-top: 40px; }
+.feature-list { display: grid; gap: 18px; }
+.feature { display: grid; grid-template-columns: 40px 1fr; gap: 14px; }
+.feature .ic { width: 40px; height: 40px; border-radius: 11px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; }
+.feature h3 { font-size: 17px; }
+.feature p { margin: 2px 0 0; color: var(--muted); font-size: 14.5px; }
+.cta { margin: 110px auto 0; max-width: 1180px; padding: 0 16px 64px; }
+.cta-in { border-radius: 24px; padding: 56px 32px; text-align: center; background: radial-gradient(ellipse at 50% 0%, rgba(242,161,74,.25), transparent 60%), var(--panel); border: 1px solid var(--line); display: grid; gap: 16px; justify-items: center; }
+.cta-in h2 { font-size: clamp(30px, 4.4vw, 52px); font-weight: 800; }
+.cta-in p { color: var(--muted); margin: 0; }
+footer { text-align: center; color: var(--dim); font-size: 13px; padding: 0 16px 40px; }
+
+/* ---------- Similarity bars ---------- */
+.sim { display: grid; gap: 7px; }
+.sim-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.sim-score { font: 700 26px var(--display); color: var(--accent); }
+.sim-row { display: grid; grid-template-columns: 74px 1fr 34px; gap: 10px; align-items: center; font-size: 12.5px; color: var(--muted); }
+.bar { height: 6px; border-radius: 99px; background: var(--panel-2); overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #e8576b, var(--accent)); }
+.sim-row b { font: 500 12px var(--mono); color: var(--fg); text-align: right; }
+.sim-card { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 24px; display: grid; gap: 18px; }
+.pair { display: flex; align-items: center; gap: 14px; }
+.pair .poster { width: 78px; }
+.pair .vs { font: 500 12px var(--mono); color: var(--dim); }
+
+/* ---------- App ---------- */
+#v-app { height: 100%; display: flex; flex-direction: column; }
+.app { flex: 1; min-height: 0; display: grid; grid-template-columns: 264px minmax(0, 1fr) 300px; transition: grid-template-columns .25s; }
+.app.l-off { grid-template-columns: 0 minmax(0, 1fr) 300px; }
+.app.r-off { grid-template-columns: 264px minmax(0, 1fr) 0; }
+.app.l-off.r-off { grid-template-columns: 0 minmax(0, 1fr) 0; }
+.side { min-height: 0; overflow: hidden; background: var(--panel); display: flex; flex-direction: column; }
+.side-l { border-right: 1px solid var(--line); }
+.side-r { border-left: 1px solid var(--line); }
+.l-off .side-l, .r-off .side-r { border: 0; }
+.side-in { width: 264px; display: flex; flex-direction: column; min-height: 0; flex: 1; }
+.side-r .side-in { width: 300px; }
+.side-head { padding: 14px; display: flex; align-items: center; gap: 8px; }
+.side-title { font: 700 15px var(--display); flex: 1; }
+.side-scroll { flex: 1; overflow-y: auto; padding: 0 10px 14px; }
+.group-label { font: 500 11px var(--mono); color: var(--dim); text-transform: uppercase; letter-spacing: .1em; padding: 14px 8px 6px; }
+.conv-row { position: relative; display: flex; align-items: center; border-radius: 9px; }
+.conv-row:hover, .conv-row:focus-within { background: var(--panel-2); }
+.conv-row .conv { padding-right: 64px; }
+.conv-acts { position: absolute; right: 4px; display: flex; gap: 2px; opacity: 0; transition: opacity .15s; }
+.conv-row:hover .conv-acts, .conv-row:focus-within .conv-acts, .conv-row.on .conv-acts { opacity: 1; }
+@media (hover: none) { .conv-acts { opacity: 1; } }
+.conv-acts .icon-btn { width: 28px; height: 28px; border-radius: 7px; }
+.conv-acts .icon-btn svg.i { width: 15px; height: 15px; }
+.conv-acts .del:hover { color: var(--danger); }
+.conv-edit { display: flex; gap: 6px; padding: 4px; }
+.conv-edit input { flex: 1; min-width: 0; background: var(--bg); border: 1px solid var(--accent); border-radius: 8px; padding: 6px 9px; font-size: 13.5px; outline: 0; }
+.conv-confirm { padding: 9px 10px; border-radius: 9px; background: rgba(239,122,108,.1); border: 1px solid rgba(239,122,108,.3); display: grid; gap: 8px; font-size: 13px; }
+.conv-confirm .row { display: flex; gap: 6px; }
+.btn-danger { background: var(--danger); color: #210806; }
+.u-row { justify-self: end; display: flex; align-items: center; gap: 6px; max-width: 80%; }
+.u-row .bubble-u { max-width: 100%; }
+.u-row .icon-btn { opacity: 0; width: 30px; height: 30px; }
+.u-row:hover .icon-btn, .u-row:focus-within .icon-btn { opacity: 1; }
+@media (hover: none) { .u-row .icon-btn { opacity: 1; } }
+.u-edit { justify-self: end; width: min(560px, 100%); display: grid; gap: 8px; background: var(--panel-2); border: 1px solid var(--accent); border-radius: 16px; padding: 10px; }
+.u-edit textarea { background: none; border: 0; outline: 0; resize: vertical; min-height: 60px; font-size: 15px; }
+.u-edit .row { display: flex; justify-content: flex-end; gap: 6px; }
+.conv { width: 100%; text-align: left; padding: 9px 10px; border-radius: 9px; color: var(--muted); font-size: 13.5px; display: flex; gap: 9px; align-items: center; }
+.conv span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+.conv:hover { color: var(--fg); }
+.conv-row.on { background: var(--panel-2); box-shadow: inset 2px 0 0 var(--accent); }
+.conv-row.on .conv { color: var(--fg); }
+.tabs { display: flex; background: var(--bg); border-radius: 999px; padding: 3px; margin: 0 14px 6px; }
+.tabs button { flex: 1; padding: 6px; border-radius: 999px; font-size: 13px; color: var(--muted); font-weight: 500; }
+.tabs button.on { background: var(--panel-2); color: var(--fg); }
+.rank { width: 100%; display: grid; grid-template-columns: 28px 40px minmax(0, 1fr); gap: 10px; align-items: center; padding: 8px 6px; border-radius: 10px; text-align: left; }
+.rank:hover { background: var(--panel-2); }
+.rank .no { font: 800 22px var(--display); color: var(--dim); text-align: center; }
+.rank:nth-child(-n+3) .no { color: var(--accent); }
+.rank .poster { width: 40px; border-radius: 5px; }
+.rank .poster * { display: none; }
+.rank .t { font-weight: 600; font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rank .m { font: 400 11.5px var(--mono); color: var(--dim); }
+.side-note { font-size: 12px; color: var(--dim); padding: 4px 14px 14px; }
+
+.chat { display: flex; flex-direction: column; min-height: 0; min-width: 0; position: relative; }
+.chat-bar { display: flex; align-items: center; gap: 6px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.chat-bar .ttl { flex: 1; text-align: center; font-size: 13.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msgs { flex: 1; overflow-y: auto; padding: 28px 16px 20px; }
+.msgs-in { max-width: 860px; margin: 0 auto; display: grid; gap: 26px; }
+.bubble-u { justify-self: end; max-width: 80%; background: var(--panel-2); border: 1px solid var(--line); padding: 10px 16px; border-radius: 18px 18px 4px 18px; }
+.ai { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; }
+.ai-av { width: 30px; height: 30px; border-radius: 9px; background: conic-gradient(from 200deg, var(--accent), #e8576b, var(--accent)); display: grid; place-items: center; }
+.ai-av::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--bg); }
+.ai-body { display: grid; gap: 14px; min-width: 0; }
+.ai-text { margin: 0; }
+.ai-text b { color: var(--fg); font-weight: 700; }
+.think { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); font-size: 13px; }
+.think summary { list-style: none; cursor: pointer; padding: 9px 13px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.think summary::-webkit-details-marker { display: none; }
+.think ol { list-style: none; margin: 0; padding: 0 13px 11px; display: grid; gap: 7px; }
+.think li { display: flex; gap: 9px; align-items: center; color: var(--dim); }
+.think li.done { color: var(--muted); }
+.think li.now { color: var(--fg); }
+.dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; flex: none; }
+.done .dot { background: var(--good); border-color: var(--good); }
+.done .dot::after { content: ''; width: 6px; height: 3px; border: solid var(--bg); border-width: 0 0 1.6px 1.6px; transform: rotate(-45deg) translate(1px, -1px); }
+.now .dot { border-color: var(--accent); border-top-color: transparent; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr)); gap: 12px; }
+.mcard { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 12px; animation: rise .45s both; }
+.mcard:hover { border-color: #463a4f; }
+.mcard .poster { width: 96px; }
+.mcard-b { display: grid; gap: 6px; align-content: start; min-width: 0; }
+.mcard h3 { font-size: 17px; line-height: 1.2; }
+.meta { font: 400 11.5px/1.4 var(--mono); color: var(--dim); }
+.meta .star { color: var(--accent); }
+.ov { font-size: 13px; color: var(--muted); margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.why { font-size: 12.5px; background: var(--accent-soft); border-radius: 8px; padding: 6px 9px; color: #f6d2a8; }
+.why strong { color: var(--accent); font-weight: 600; }
+.mini-sim { display: flex; align-items: center; gap: 8px; font: 500 12px var(--mono); color: var(--accent); }
+.mini-sim .bar { flex: 1; }
+.acts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+.act { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 8px; border: 1px solid var(--line); font-size: 12.5px; color: var(--muted); }
+.act:hover { color: var(--fg); border-color: var(--muted); }
+.act.added { color: var(--good); border-color: rgba(134,207,168,.4); }
+.act svg.i { width: 14px; height: 14px; }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+.cmp-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+.cmp { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 520px; }
+.cmp th, .cmp td { padding: 11px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.cmp tr:last-child td { border-bottom: 0; }
+.cmp thead th { vertical-align: bottom; }
+.cmp thead .poster { width: 70px; margin-bottom: 8px; }
+.cmp th[scope=row] { color: var(--dim); font: 500 11.5px var(--mono); text-transform: uppercase; letter-spacing: .06em; width: 110px; }
+.cmp .win { color: var(--accent); font-weight: 600; }
+.pairs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 12px; }
+.pairs .sim-card { padding: 16px; gap: 12px; border-radius: 14px; }
+.verdict { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; margin: 0; }
+.empty-chat { max-width: 640px; margin: 8vh auto 0; text-align: center; display: grid; gap: 14px; justify-items: center; }
+.empty-chat h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; }
+.empty-chat p { color: var(--muted); margin: 0; }
+.composer { padding: 10px 16px 16px; }
+.composer-in { max-width: 860px; margin: 0 auto; display: grid; gap: 8px; }
+.guest { font-size: 12.5px; color: var(--muted); text-align: center; }
+.guest button { color: var(--accent); font-weight: 600; font-size: inherit; }
+.box { display: flex; align-items: flex-end; gap: 8px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 8px 8px 8px 16px; }
+.box:focus-within { border-color: #4d4057; }
+.box textarea { flex: 1; min-width: 0; resize: none; background: none; border: 0; outline: 0; padding: 7px 0; max-height: 140px; font-size: 15px; }
+.send { width: 38px; height: 38px; border-radius: 11px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; }
+.send svg.i { stroke-width: 2.2; }
+.send:disabled { opacity: .4; cursor: default; }
+
+/* ---------- My List ---------- */
+.page { max-width: 1180px; margin: 0 auto; padding: 36px 16px 140px; }
+.page-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 26px; }
+.page-head h1 { font-size: clamp(32px, 4.5vw, 48px); font-weight: 800; }
+.page-head p { color: var(--muted); margin: 6px 0 0; max-width: 560px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 22px 18px; }
+.tile { display: grid; gap: 9px; text-align: left; position: relative; }
+.tile .poster { width: 100%; transition: transform .2s, box-shadow .2s; }
+.tile:hover .poster { transform: translateY(-3px); }
+.tile.sel .poster { box-shadow: 0 0 0 3px var(--accent), 0 16px 40px -12px rgba(242,161,74,.5); }
+.tick { position: absolute; top: 9px; left: 9px; z-index: 2; width: 26px; height: 26px; border-radius: 8px; background: rgba(17,13,19,.7); border: 1.5px solid rgba(255,255,255,.5); display: grid; place-items: center; }
+.sel .tick { background: var(--accent); border-color: var(--accent); }
+.sel .tick::after { content: ''; width: 10px; height: 5px; border: solid var(--accent-ink); border-width: 0 0 2px 2px; transform: rotate(-45deg) translate(1px, -1px); }
+.tile h3 { font-size: 15.5px; line-height: 1.25; }
+.tile-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.linkish { font-size: 12.5px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+.linkish:hover { color: var(--fg); }
+.actionbar { position: fixed; z-index: 40; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; padding: 10px 10px 10px 18px; background: var(--panel-2); border: 1px solid #463a4f; border-radius: 999px; box-shadow: 0 24px 60px -10px rgba(0,0,0,.7); width: max-content; max-width: calc(100% - 32px); animation: rise .25s both; }
+.actionbar .n { font-size: 13.5px; color: var(--muted); margin-right: 6px; }
+.actionbar .n b { color: var(--fg); }
+.hint { font-size: 12px; color: var(--dim); }
+.state { text-align: center; padding: 70px 16px; display: grid; gap: 14px; justify-items: center; border: 1px dashed var(--line); border-radius: 20px; }
+.state h2 { font-size: 26px; }
+.state p { color: var(--muted); margin: 0; max-width: 420px; }
+
+/* ---------- Login ---------- */
+#v-login { display: grid; grid-template-columns: 1fr 1fr; min-height: 100%; }
+.login-art { position: relative; overflow: hidden; background: var(--panel); display: flex; align-items: flex-end; padding: 40px; }
+.mosaic { position: absolute; inset: -40px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; transform: rotate(-8deg) scale(1.15); opacity: .5; }
+.login-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, var(--bg) 8%, transparent 70%); }
+.login-art blockquote { position: relative; z-index: 1; margin: 0; font: 700 clamp(22px, 2.6vw, 32px)/1.2 var(--display); max-width: 440px; letter-spacing: -.02em; }
+.login-art cite { display: block; font: 400 13px var(--mono); color: var(--muted); margin-top: 12px; font-style: normal; }
+.login-form { display: grid; align-content: center; padding: 40px 16px; }
+.login-form form { width: 100%; max-width: 380px; margin: 0 auto; display: grid; gap: 16px; }
+.login-form h1 { font-size: 34px; font-weight: 800; }
+.login-form .sub { color: var(--muted); margin: -6px 0 6px; }
+.field { display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
+.field input { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; outline: 0; font-size: 15px; }
+.field input:focus { border-color: var(--accent); }
+.or { display: flex; align-items: center; gap: 10px; color: var(--dim); font-size: 12px; }
+.or::before, .or::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+.err { color: var(--danger); font-size: 13px; margin: 0; }
+
+/* ---------- Modal / Drawer / Toast ---------- */
+.scrim { position: fixed; inset: 0; z-index: 60; background: rgba(8,6,10,.66); }
+.scrim.enter { animation: fade .3s ease both; }
+.scrim.leave { animation: fadeOut .22s ease both; }
+@keyframes fadeOut { to { opacity: 0; } }
+.modal.enter { animation: pop .24s cubic-bezier(.2,.8,.2,1) both; }
+.modal.leave { animation: fadeOut .16s ease both; }
+@keyframes pop { from { opacity: 0; transform: translate(-50%, -47%) scale(.97); } }
+@keyframes fade { from { opacity: 0; } }
+.modal { position: fixed; z-index: 61; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(420px, calc(100% - 32px)); background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 28px; display: grid; gap: 12px; text-align: center; justify-items: center; }
+.modal .ic { width: 48px; height: 48px; border-radius: 14px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; }
+.modal h2 { font-size: 22px; }
+.modal p { color: var(--muted); margin: 0 0 6px; font-size: 14.5px; }
+.modal .row { display: flex; gap: 8px; }
+.drawer { position: fixed; z-index: 61; top: 0; right: 0; bottom: 0; width: min(520px, 100%); background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; overscroll-behavior: contain; will-change: transform; box-shadow: -30px 0 80px rgba(0,0,0,.45); }
+.drawer.enter { animation: slideIn .42s cubic-bezier(.32,.72,0,1) both; }
+.drawer.leave { animation: slideOut .26s cubic-bezier(.4,0,1,1) both; }
+@keyframes slideIn { from { transform: translateX(100%); } }
+@keyframes slideOut { to { transform: translateX(100%); } }
+.d-hero { position: relative; padding: 24px 24px 0; display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 20px; align-items: end; }
+.d-hero::before { content: ''; position: absolute; inset: 0 0 -40px; background: radial-gradient(ellipse at 20% 0%, hsl(var(--h) 70% 45% / .45), transparent 70%); }
+.d-hero > * { position: relative; }
+.d-hero .poster { width: 140px; }
+.d-hero h2 { font-size: 30px; font-weight: 800; line-height: 1.05; }
+.d-close { position: absolute; top: 14px; right: 14px; z-index: 2; background: rgba(17,13,19,.6); }
+.d-body { padding: 22px 24px 32px; display: grid; gap: 22px; }
+.d-sec { display: grid; gap: 8px; }
+.d-sec h4 { margin: 0; font: 500 11.5px var(--mono); text-transform: uppercase; letter-spacing: .1em; color: var(--dim); }
+.d-sec p { margin: 0; color: var(--muted); font-size: 14.5px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: 12.5px; padding: 4px 10px; border-radius: 99px; background: var(--panel-2); color: var(--muted); }
+.facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border-radius: 12px; overflow: hidden; }
+.facts div { background: var(--panel-2); padding: 12px; }
+.facts b { display: block; font: 700 20px var(--display); }
+.facts span { font-size: 11.5px; color: var(--dim); }
+.simlist { display: grid; gap: 8px; }
+.simitem { display: grid; grid-template-columns: 36px minmax(0, 1fr) 54px; gap: 12px; align-items: center; padding: 6px; border-radius: 10px; text-align: left; }
+.simitem:hover { background: var(--panel-2); }
+.simitem .poster { width: 36px; border-radius: 4px; }
+.simitem .poster * { display: none; }
+.simitem b { font: 600 13px var(--mono); color: var(--accent); text-align: right; }
+.d-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.toast { position: fixed; z-index: 80; left: 50%; top: calc(76px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: 14px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,.5); animation: rise .25s both; max-width: calc(100% - 32px); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1080px) {
+  .feats { grid-template-columns: repeat(2, 1fr); }
+  .app, .app.l-off, .app.r-off, .app.l-off.r-off { grid-template-columns: minmax(0, 1fr); }
+  .side { position: fixed; z-index: 50; top: var(--top); bottom: 0; box-shadow: 0 0 60px rgba(0,0,0,.6); }
+  .side-l { left: 0; } .side-r { right: 0; }
+  .app.l-off .side-l, .app.r-off .side-r { display: none; }
+}
+@media (max-width: 860px) {
+  .hero-in, .duo { grid-template-columns: 1fr; gap: 40px; }
+  .steps-row, .feats { grid-template-columns: 1fr; }
+  #v-login { grid-template-columns: 1fr; }
+  .login-art { display: none; }
+  .nav { margin-left: 0; }
+  .user-chip .nm { display: none; }
+}
+@media (max-width: 520px) {
+  .mcard { grid-template-columns: 76px minmax(0, 1fr); }
+  .mcard .poster { width: 76px; }
+  .d-hero { grid-template-columns: 100px minmax(0, 1fr); }
+  .d-hero .poster { width: 100px; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .logo span { display: none; }
+  .bubble-u, .u-row { max-width: 92%; }
+  .actionbar { border-radius: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition: none !important; }
+}
+</style>
+
+<div id="root"></div>
+
+<script>
+const MOVIES = /*__DATA__*/[];
+const TREND = /*__TREND__*/{};
+const byId = Object.fromEntries(MOVIES.map(m => [m.id, m]));
+// Đổi poster base64 → blob URL một lần, để HTML mỗi lần render chỉ chứa link ngắn
+MOVIES.forEach(m => {
+  if (!m.img) return;
+  try {
+    const bin = atob(m.img.split(',')[1]), buf = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+    m.img = URL.createObjectURL(new Blob([buf], { type: 'image/jpeg' }));
+  } catch { m.img = null; }
+});
+
+/* ================= Icons ================= */
+const P = {
+  send: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  check: '<path d="M5 12l5 5 9-10"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+  spark: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>',
+  similar: '<circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/>',
+  compare: '<path d="M8 4v16M16 4v16M4 8h4M16 16h4"/>',
+  history: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 3"/>',
+  trend: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+  close: '<path d="M6 6l12 12M18 6L6 18"/>',
+  lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  new: '<path d="M12 20h9M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4z"/>',
+  chat: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',
+  list: '<path d="M6 4h12v17l-6-4-6 4z"/>',
+  logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>',
+  play: '<path d="M7 4l13 8-13 8z"/>',
+  pen: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>',
+  trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+};
+const ic = n => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${P[n]}</svg>`;
+
+/* ================= Helpers ================= */
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const md = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'd').toLowerCase();
+const uid = () => Math.random().toString(36).slice(2, 9);
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('cm_' + k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem('cm_' + k, JSON.stringify(v)); } catch {} },
+};
+const poster = m => `<div class="poster" style="--h:${m.hue}" role="img" aria-label="Poster ${esc(m.title)}">${m.img ? `<img src="${m.img}" alt="" onerror="this.remove()">` : ''}<span class="p-year">${m.year}</span><span class="p-cap"><span class="p-title" style="--fs:${Math.min(14, 112 / Math.max(...m.title.split(/\s+/).map(w => w.length))).toFixed(1)}cqi">${esc(m.title)}</span><span class="p-dir">${esc(m.director)}</span></span></div>`;
+const metaLine = m => `${m.year} · ${esc(m.director)} · ${m.runtime} phút · <span class="star">★ ${m.rating}</span>`;
+
+/* ================= Mock AI engine =================
+   Sau này thay respond() bằng API thật trả về cùng shape:
+   { steps, text, movies:[{id, reason, sim?}], compare?, verdict?, chips } */
+const jac = (a, b) => { const A = new Set(a), B = new Set(b); const n = [...A].filter(x => B.has(x)).length; return n / (A.size + B.size - n || 1); };
+function similarity(a, b) {
+  const topic = jac([...a.genres, ...a.keywords], [...b.genres, ...b.keywords]);
+  const content = Math.min(1, .35 + jac(a.genres, b.genres) * .5 + topic * .6 + (a.mood.split(',')[0] === b.mood.split(',')[0] ? .15 : 0));
+  const team = Math.min(1, (a.director === b.director ? .7 : 0) + (a.cast.some(c => b.cast.includes(c)) ? .3 : 0) + Math.max(0, .3 - Math.abs(a.year - b.year) / 40));
+  const t = Math.min(1, topic * 2.2);
+  return { score: Math.round((.55 * content + .25 * t + .2 * team) * 100), parts: { 'Nội dung': content, 'Chủ đề': t, 'Đội ngũ': team } };
+}
+function similarTo(ids, n = 4) {
+  return MOVIES.filter(m => !ids.includes(m.id)).map(m => {
+    const best = ids.map(id => similarity(byId[id], m)).reduce((x, y) => y.score > x.score ? y : x);
+    return { id: m.id, sim: best };
+  }).sort((x, y) => y.sim.score - x.sim.score).slice(0, n);
+}
+const INTENTS = [
+  { k: ['nolan', 'xoan nao', 'hack nao', 'twist', 'khoa hoc vien tuong', 'sci-fi', 'scifi', 'vu tru'],
+    text: 'Bạn thích kiểu phim bắt não chạy hết công suất. Mình lọc ra những phim có cấu trúc nhiều tầng, ý tưởng khoa học lớn và cái kết khiến bạn muốn xem lại:',
+    picks: [[27205, 'Cấu trúc giấc mơ lồng nhau, đỉnh cao của thể loại xoắn não.'], [329865, 'Cú twist về thời gian tinh tế, cảm xúc sâu hơn phim Nolan.'], [157336, 'Khoa học nghiêm túc đi cùng câu chuyện cha con.'], [545611, 'Đa vũ trụ điên rồ nhưng lõi là tình mẹ con rất đời.']],
+    chips: ['Ngắn hơn 2 tiếng thôi', 'So sánh Inception và Arrival', 'Phim giống Interstellar'] },
+  { k: ['nhe nhang', 'lang man', 'tinh cam', 'hen ho', 'nguoi yeu', 'chill', 'thu gian', 'buon', 'ngan hon'],
+    text: 'Một buổi tối nhẹ nhàng cần phim đẹp, nhịp chậm và để lại dư vị. Đây là những lựa chọn mình thấy hợp nhất:',
+    picks: [[666277, 'Nhẹ như một tiếng thở dài, xem xong sẽ nghĩ về nó cả tuần.'], [313369, 'Âm nhạc, màu sắc và một cái kết đẹp đến day dứt.'], [372058, 'Hình ảnh tuyệt đẹp, lãng mạn mà không sến.'], [120467, 'Duyên dáng, hài hước kiểu Wes Anderson, chỉ 99 phút.']],
+    chips: ['Có phim nào vui hơn không?', 'Chỉ phim Hàn thôi', 'So sánh La La Land và Past Lives'] },
+  { k: ['han quoc', 'phim han', 'korea', 'kdrama'],
+    text: 'Điện ảnh Hàn đang ở phong độ rất cao. Mình chọn 3 phim ở 3 gu khác nhau để bạn dễ chọn:',
+    picks: [[496243, 'Oscar Phim hay nhất, châm biếm giai cấp với cú twist khó đoán.'], [396535, 'Phim zombie trên tàu nhưng thực chất là phim về tình cha con.'], [666277, 'Nếu muốn nhẹ nhàng: chuyện duyên phận của người Hàn xa xứ.']],
+    chips: ['So sánh Parasite và Get Out', 'Phim giống Parasite'] },
+  { k: ['hoat hinh', 'anime', 'gia dinh', 'tre con', 'con nho', 'ghibli', 'ca nha'],
+    text: 'Phim hoạt hình hay thì người lớn xem còn khóc nhiều hơn trẻ con. Đây là những phim cả nhà đều mê:',
+    picks: [[129, 'Kinh điển của Ghibli, thế giới tưởng tượng phong phú bậc nhất.'], [354912, 'Về gia đình và ký ức. Nhớ chuẩn bị khăn giấy.'], [569094, 'Phong cách hình ảnh đột phá, hành động mãn nhãn.'], [372058, 'Lãng mạn tuổi học trò, hợp với teen trở lên.']],
+    chips: ['Phim giống Spirited Away', 'So sánh Coco và Your Name'] },
+  { k: ['kinh di', 'hoi hop', 'giat gan', 'rung ron', 'trinh tham', 'bi an'],
+    text: 'Muốn tim đập nhanh mà vẫn có chiều sâu? Đây là những phim hồi hộp có kịch bản thông minh, không chỉ hù dọa:',
+    picks: [[419430, 'Kinh dị tâm lý xuất sắc, càng nghĩ càng rợn.'], [396535, 'Nhịp phim không cho bạn thở, nhưng cái kết rất cảm động.'], [546554, 'Hồi hộp kiểu trinh thám, vui và lắt léo.'], [496243, 'Nửa sau leo thang căng thẳng đến khó tin.']],
+    chips: ['Ít máu me hơn', 'So sánh Get Out và Knives Out'] },
+  { k: ['hanh dong', 'action', 'bom tan', 'chay no', 'sieu anh hung'],
+    text: 'Đây là những bom tấn hành động có chất lượng điện ảnh thật sự, không chỉ cháy nổ:',
+    picks: [[76341, 'Rượt đuổi 2 tiếng không nghỉ, hành động quay bằng xe thật.'], [155, 'Phim siêu anh hùng hay nhất mọi thời, nhờ Joker của Heath Ledger.'], [693134, 'Quy mô sử thi, đáng xem nhất ở rạp IMAX.'], [569094, 'Hành động hoạt hình sáng tạo nhất thập kỷ.']],
+    chips: ['So sánh Dune 2 và Mad Max', 'Phim giống The Dark Knight'] },
+];
+const FALLBACK = {
+  text: 'Mình chưa rõ bạn đang tìm kiểu phim nào. Bạn có thể kể thêm thể loại, tâm trạng tối nay, hay một phim bạn từng rất thích. Trong lúc đó, đây là những phim được đánh giá cao nhất tuần này:',
+  picks: [[693134, 'Đang dẫn đầu thịnh hành tuần, bom tấn sử thi.'], [666277, 'Phim nhỏ nhưng được giới phê bình khen hết lời.'], [496243, 'Ai cũng nên xem ít nhất một lần.']],
+  chips: ['Phim giống Inception', 'Phim nhẹ nhàng tối nay', 'Phim Hàn Quốc hay', 'Phim hoạt hình cho cả nhà'],
+};
+const findTitle = s => { const w = norm(s).trim().replace(/^(phim)\s+/, ''); return MOVIES.find(m => norm(m.title).startsWith(w.split(' ')[0]) || norm(m.title).includes(w)); };
+function respond(inp) {
+  if (inp.type === 'compare') return compareReply(inp.ids);
+  if (inp.type === 'similar') return similarReply(inp.ids);
+  if (inp.type === 'about') return aboutReply(inp.id);
+  const q = norm(inp.text);
+  const cmp = q.match(/so sanh (.+?) (?:va|voi|vs) (.+)/);
+  if (cmp) { const a = findTitle(cmp[1]), b = findTitle(cmp[2]); if (a && b && a.id !== b.id) return compareReply([a.id, b.id]); }
+  const g = q.match(/giong (.+)/);
+  if (g) { const m = findTitle(g[1].replace(/nhung.*$/, '')); if (m) return similarReply([m.id]); }
+  const it = INTENTS.find(i => i.k.some(k => q.includes(k))) || FALLBACK;
+  return { steps: ['Phân tích yêu cầu & gu của bạn', `Truy xuất ${(1240 + q.length * 37).toLocaleString('vi-VN')} phim từ kho dữ liệu`, 'Lọc & xếp hạng theo độ phù hợp', 'Viết giải thích cho từng gợi ý'],
+    text: it.text, movies: it.picks.map(([id, reason]) => ({ id, reason })), chips: it.chips };
+}
+function similarReply(ids) {
+  return { steps: ['Đọc hồ sơ phim gốc', 'Tính tương đồng: dense + keyword + metadata', 'Lọc trùng & xếp hạng', 'Giải thích điểm giống nhau'],
+    text: `Đây là những phim gần nhất với ${ids.map(id => `**${byId[id].title}**`).join(', ')}. Điểm % tổng hợp từ độ giống về nội dung, chủ đề và đội ngũ sản xuất:`,
+    movies: similarTo(ids).map(({ id, sim }) => { const top = Object.entries(sim.parts).sort((a, b) => b[1] - a[1])[0][0]; return { id, sim, reason: `Giống nhất ở ${top.toLowerCase()}. Không khí phim ${byId[id].mood.toLowerCase()}.` }; }),
+    chips: ['Phim nhẹ nhàng hơn', 'Phim hành động bom tấn'] };
+}
+function compareReply(ids) {
+  const ms = ids.map(id => byId[id]);
+  const best = [...ms].sort((a, b) => b.rating - a.rating)[0], short = [...ms].sort((a, b) => a.runtime - b.runtime)[0];
+  return { steps: ['Tải hồ sơ các phim', 'Đối chiếu nội dung, nhịp phim, đội ngũ', 'Tính độ tương đồng từng cặp', 'Viết kết luận'],
+    text: `So sánh nhanh ${ms.map(m => `**${m.title}**`).join(' và ')}:`, compare: ids,
+    verdict: best === short ? `**${best.title}** thắng cả hai mặt: điểm cao nhất (${best.rating}) và ngắn nhất (${best.runtime} phút). Tối nay xem phim này là hợp lý.`
+      : `Nếu chỉ chọn một, **${best.title}** có điểm cao nhất (${best.rating}). Nếu tối nay ít thời gian, **${short.title}** chỉ ${short.runtime} phút, không khí ${short.mood.toLowerCase()}.`,
+    chips: ['Tìm phim giống cả hai', 'Phim nhẹ nhàng tối nay'] };
+}
+function aboutReply(id) {
+  const m = byId[id];
+  return { steps: ['Truy xuất thông tin phim', 'Tổng hợp review từ nhiều nguồn', 'Viết tóm tắt'],
+    text: `**${m.title}** (${m.year}) của ${m.director}. ${m.overview} Khán giả nhận xét phim ${m.mood.toLowerCase()}, điểm trung bình ${m.rating}/10. Bạn sẽ thích nếu từng mê những phim về ${m.keywords.slice(0, 2).join(' và ')}.`,
+    movies: [{ id, reason: `Đang nằm trong top thịnh hành. Không khí ${m.mood.toLowerCase()}.` }], chips: [`Phim giống ${m.title}`, 'Phim nhẹ nhàng tối nay'] };
+}
+const labelOf = inp => inp.text || (inp.type === 'compare' ? `So sánh ${inp.ids.map(id => byId[id].title).join(' và ')}` : inp.type === 'similar' ? `Tìm phim giống ${inp.ids.map(id => byId[id].title).join(', ')}` : `Kể mình nghe về ${byId[inp.id].title}`);
+
+/* ================= State ================= */
+const seedConvs = () => [['Phim giống Inception nhưng nhẹ hơn'], ['Phim Hàn Quốc hay'], ['So sánh Dune 2 và Mad Max']].map(([t], i) => ({
+  id: 's' + i, title: t, ago: i, msgs: [{ role: 'user', text: t }, { role: 'ai', done: true, ...respond({ text: t }) }],
+}));
+const S = {
+  view: 'landing', user: store.get('user', null), list: store.get('list', []),
+  convs: store.get('convs', null) || seedConvs(), cur: 's0', tab: 'week',
+  lOff: innerWidth <= 1080, rOff: innerWidth <= 1080, sel: [], modal: null, drawer: null, pending: null, back: 'app', loginErr: '',
+};
+const save = () => { store.set('user', S.user); store.set('list', S.list); store.set('convs', S.convs); };
+const conv = () => S.convs.find(c => c.id === S.cur);
+const busy = () => { const c = conv(); return !!c && c.msgs.some(m => m.role === 'ai' && !m.done); };
+
+/* ================= Render ================= */
+const root = document.getElementById('root');
+const ovEl = document.createElement('div'), toastEl = document.createElement('div');
+document.body.append(ovEl, toastEl);
+let lastOv = '';
+function renderOv() {
+  const html = overlays();
+  if (html !== lastOv) {
+    const st = ovEl.querySelector('.drawer')?.scrollTop || 0;
+    ovEl.innerHTML = html; lastOv = html;
+    const d = ovEl.querySelector('.drawer');
+    if (d && !S.anim) d.scrollTop = st;
+  }
+  S.anim = false;
+  document.body.style.overflow = S.drawer || S.modal ? 'hidden' : '';
+}
+function closeOv(after) {
+  const els = ovEl.querySelectorAll('.scrim, .drawer, .modal');
+  if (!els.length) return after();
+  let done = false;
+  const fin = () => { if (!done) { done = true; after(); } };
+  els.forEach(el => { el.classList.remove('enter'); el.classList.add('leave'); });
+  els[els.length - 1].addEventListener('animationend', fin, { once: true });
+  setTimeout(fin, 320);
+}
+const closeDrawer = () => closeOv(() => { S.drawer = null; renderOv(); });
+const closeModal = () => closeOv(() => { S.modal = null; S.pending = null; renderOv(); });
+const openDrawer = id => { S.drawer = id; S.anim = true; renderOv(); };
+function render() {
+  const v = { landing: Landing, app: App, list: MyList, login: Login }[S.view];
+  root.innerHTML = v();
+  renderOv();
+  toastEl.innerHTML = S.toast ? `<div class="toast" role="status">${esc(S.toast)}</div>` : '';
+  const f = S.focusNext && document.getElementById(S.renaming ? 'rn' : 'em-t');
+  if (f) { f.focus(); f.select?.(); S.focusNext = false; }
+  if (S.view === 'app') { const el = document.querySelector('.msgs'); if (el && S.scroll) { el.scrollTop = el.scrollHeight; S.scroll = false; } }
+}
+function go(view) {
+  S.view = view; S.drawer = null;
+  try { history.replaceState(null, '', '#' + view); } catch {}
+  S.scroll = true; render(); window.scrollTo(0, 0);
+}
+let toastT;
+function toast(t) { S.toast = t; render(); clearTimeout(toastT); toastT = setTimeout(() => { S.toast = null; toastEl.innerHTML = ''; }, 2200); }
+
+const Logo = () => `<button class="logo" data-act="go" data-v="landing" aria-label="CineMind, về trang chủ"><i class="logo-mark"></i><span>CineMind</span></button>`;
+const UserArea = () => S.user
+  ? `<div class="user-chip"><span class="nm">${esc(S.user.name)}</span><span class="avatar">${esc(S.user.name[0].toUpperCase())}</span><button class="icon-btn" data-act="logout" title="Đăng xuất" aria-label="Đăng xuất">${ic('logout')}</button></div>`
+  : `<button class="btn btn-ghost btn-sm" data-act="login">Đăng nhập</button>`;
+const TopBar = () => `<header class="topbar">${Logo()}<nav class="nav">
+  <button class="${S.view === 'app' ? 'on' : ''}" data-act="go" data-v="app">Chat</button>
+  <button class="${S.view === 'list' ? 'on' : ''}" data-act="gotoList">My List${S.user && S.list.length ? `<span class="count">${S.list.length}</span>` : ''}</button>
+  </nav><div class="spacer"></div>${UserArea()}</header>`;
+
+function Landing() {
+  const strip = [...MOVIES, ...MOVIES].map(poster).join('');
+  const a = byId[27205], b = byId[157336], s = similarity(a, b);
+  return `<main class="view" id="v-landing">
+  <header class="topbar">${Logo()}<div class="spacer"></div>${S.user ? `<button class="btn btn-ghost btn-sm" data-act="go" data-v="list">My List</button>` : `<button class="btn btn-ghost btn-sm" data-act="login">Đăng nhập</button>`}<button class="btn btn-primary btn-sm" data-act="go" data-v="app">Mở CineMind</button></header>
+  <section class="hero"><div class="hero-in">
+    <div>
+      <h1>Tìm phim để xem tối nay bằng <em>một câu hỏi</em>.</h1>
+      <p class="lead">Nói thể loại, tâm trạng hoặc một phim bạn từng thích. CineMind gợi ý vài phim phù hợp, kèm lý do ngắn cho từng phim.</p>
+      <form class="ask" data-form="hero"><input id="hero-q" placeholder="Ví dụ: phim giống Inception nhưng nhẹ hơn" aria-label="Bạn muốn xem gì?" autocomplete="off"><button class="btn btn-primary" type="submit">Hỏi AI ${ic('send')}</button></form>
+      <div class="chips">${['Phim nhẹ nhàng tối nay', 'Phim Hàn Quốc hay', 'Phim hoạt hình cho cả nhà', 'So sánh Dune 2 và Mad Max'].map(t => `<button class="chip" data-act="ask" data-t="${t}">${t}</button>`).join('')}</div>
+    </div>
+    <div class="preview" aria-hidden="true">
+      <div class="bubble-u">Tối nay mệt, muốn xem phim nhẹ nhàng</div>
+      <div class="ai"><i class="ai-av"></i><div class="ai-body">
+        <details class="think"><summary>${ic('spark')} Đã suy luận qua 4 bước · 1,6 giây</summary></details>
+        <p class="ai-text">Phim hợp nhất với bạn tối nay:</p>
+        ${MovieCard({ id: 666277, reason: 'Nhịp chậm, nhẹ nhàng, chỉ 106 phút.' }, true)}
+      </div></div>
+    </div>
+  </div>
+  <div class="strip" aria-hidden="true">${strip}</div></section>
+
+  <section class="section">
+    <h2>Bạn làm được gì với CineMind</h2>
+    <div class="steps-row feats">
+      ${[['chat', 'Hỏi bằng lời thường', 'Không cần bộ lọc. Chat được ngay, không cần tài khoản.'],
+         ['spark', 'Gợi ý kèm lý do', 'Mỗi phim có một dòng giải thích vì sao hợp với bạn.'],
+         ['compare', 'So sánh 2–3 phim', 'Bảng so sánh thời lượng, điểm, không khí phim và kết luận nên xem phim nào.'],
+         ['similar', 'Tìm phim tương tự', 'Từ một phim bạn thích, ra danh sách phim gần nhất kèm % tương đồng.']]
+        .map(([i, h, p]) => `<div class="step-card"><span class="ic-sq">${ic(i)}</span><h3>${h}</h3><p>${p}</p></div>`).join('')}
+    </div>
+  </section>
+
+  <section class="section"><div class="duo">
+    <div>
+      <h2>Biết hai phim giống nhau ở điểm nào</h2>
+      <p>Điểm tương đồng được tách theo nội dung, chủ đề và đội ngũ làm phim.</p>
+    </div>
+    <div class="sim-card">
+      <div class="pair">${poster(a)}<span class="vs">VS</span>${poster(b)}</div>
+      ${SimBlock(s, `${a.title} ↔ ${b.title}`)}
+    </div>
+  </div></section>
+
+  <section class="cta"><div class="cta-in">
+    <h2>Bắt đầu tìm phim</h2>
+    <p>Không cần tài khoản để chat.</p>
+    <button class="btn btn-primary" data-act="go" data-v="app">Mở CineMind ${ic('send')}</button>
+  </div></section>
+  <footer>CineMind · Bản mockup giao diện · Dữ liệu phim minh hoạ, poster vẽ tạm</footer>
+  </main>`;
+}
+
+function SimBlock(s, label) {
+  return `<div class="sim"><div class="sim-head"><span class="meta">${esc(label)}</span><span class="sim-score mono">${s.score}%</span></div>
+  ${Object.entries(s.parts).map(([k, v]) => `<div class="sim-row"><span>${k}</span><span class="bar"><i style="width:${Math.round(v * 100)}%"></i></span><b>${Math.round(v * 100)}</b></div>`).join('')}</div>`;
+}
+
+function MovieCard(r, still) {
+  const m = byId[r.id], inList = S.user && S.list.includes(m.id);
+  return `<article class="mcard"${still ? ' style="animation:none"' : ''}>${poster(m)}<div class="mcard-b">
+    <h3>${esc(m.title)}</h3><div class="meta">${metaLine(m)}</div>
+    <p class="ov">${esc(m.overview)}</p>
+    ${r.sim ? `<div class="mini-sim"><span>${r.sim.score}% tương đồng</span><span class="bar"><i style="width:${r.sim.score}%"></i></span></div>` : ''}
+    <div class="why"><strong>Hợp với bạn vì</strong> ${esc(r.reason)}</div>
+    ${still ? '' : `<div class="acts">
+      <button class="act ${inList ? 'added' : ''}" data-act="add" data-id="${m.id}">${ic(inList ? 'check' : 'plus')}${inList ? 'Đã lưu' : 'My List'}</button>
+      <button class="act" data-act="detail" data-id="${m.id}">${ic('info')}Chi tiết</button>
+      <button class="act" data-act="similar" data-id="${m.id}">${ic('similar')}Tương tự</button>
+    </div>`}
+  </div></article>`;
+}
+
+function CompareBlock(ids) {
+  const ms = ids.map(id => byId[id]);
+  const maxR = Math.max(...ms.map(m => m.rating)), minT = Math.min(...ms.map(m => m.runtime));
+  const row = (label, f, win) => `<tr><th scope="row">${label}</th>${ms.map(m => `<td class="${win && win(m) ? 'win' : ''}">${f(m)}</td>`).join('')}</tr>`;
+  const pairs = [];
+  for (let i = 0; i < ms.length; i++) for (let j = i + 1; j < ms.length; j++) pairs.push([ms[i], ms[j]]);
+  return `<div class="cmp-wrap"><table class="cmp">
+    <thead><tr><th></th>${ms.map(m => `<th>${poster(m)}<div style="font-family:var(--display);font-size:16px">${esc(m.title)}</div></th>`).join('')}</tr></thead>
+    <tbody>
+      ${row('Năm', m => m.year)}
+      ${row('Đạo diễn', m => esc(m.director))}
+      ${row('Thời lượng', m => m.runtime + ' phút', m => m.runtime === minT)}
+      ${row('Điểm', m => '★ ' + m.rating, m => m.rating === maxR)}
+      ${row('Thể loại', m => m.genres.join(', '))}
+      ${row('Không khí', m => m.mood)}
+      ${row('Chủ đề', m => m.keywords.slice(0, 3).join(', '))}
+    </tbody></table></div>
+    <div class="pairs">${pairs.map(([a, b]) => `<div class="sim-card">${SimBlock(similarity(a, b), `${a.title} ↔ ${b.title}`)}</div>`).join('')}</div>`;
+}
+
+function AiMsg(m) {
+  const n = m.done ? m.steps.length : (m.step || 0);
+  const steps = `<details class="think" ${m.done ? '' : 'open'}><summary>${ic('spark')} ${m.done ? `Đã suy luận qua ${m.steps.length} bước` : 'Đang suy luận…'}</summary>
+    <ol>${m.steps.map((s, i) => `<li class="${i < n ? 'done' : i === n ? 'now' : ''}"><span class="dot"></span>${esc(s)}</li>`).join('')}</ol></details>`;
+  if (!m.done) return `<div class="ai"><i class="ai-av"></i><div class="ai-body">${steps}</div></div>`;
+  return `<div class="ai"><i class="ai-av"></i><div class="ai-body">${steps}
+    <p class="ai-text">${md(m.text)}</p>
+    ${m.movies ? `<div class="cards">${m.movies.map(r => MovieCard(r)).join('')}</div>` : ''}
+    ${m.compare ? CompareBlock(m.compare) : ''}
+    ${m.verdict ? `<p class="verdict">${md(m.verdict)}</p>` : ''}
+    ${m.chips && m === conv().msgs.at(-1) ? `<div class="chips">${m.chips.map(c => `<button class="chip" data-act="ask" data-t="${esc(c)}">${esc(c)}</button>`).join('')}</div>` : ''}
+  </div></div>`;
+}
+
+function App() {
+  const c = conv();
+  const recent = S.convs.filter(x => !x.ago), older = S.convs.filter(x => x.ago);
+  const cv = x => {
+    if (S.renaming === x.id) return `<form class="conv-edit" data-form="rename" data-id="${x.id}"><input id="rn" value="${esc(x.title)}" aria-label="Tên cuộc trò chuyện" maxlength="80"><button class="icon-btn" type="submit" aria-label="Lưu tên">${ic('check')}</button></form>`;
+    if (S.deleting === x.id) return `<div class="conv-confirm" role="alert">Xoá "${esc(x.title.slice(0, 40))}"?<div class="row"><button class="btn btn-danger btn-sm" data-act="delConvYes" data-id="${x.id}">Xoá</button><button class="btn btn-ghost btn-sm" data-act="delConvNo">Huỷ</button></div></div>`;
+    return `<div class="conv-row ${x.id === S.cur ? 'on' : ''}"><button class="conv" data-act="conv" data-id="${x.id}">${ic('chat')}<span>${esc(x.title)}</span></button>
+      <span class="conv-acts"><button class="icon-btn" data-act="renameConv" data-id="${x.id}" title="Đổi tên" aria-label="Đổi tên ${esc(x.title)}">${ic('pen')}</button><button class="icon-btn del" data-act="delConv" data-id="${x.id}" title="Xoá" aria-label="Xoá ${esc(x.title)}">${ic('trash')}</button></span></div>`;
+  };
+  const empty = `<div class="empty-chat"><span class="eyebrow">CineMind</span><h2>Tối nay bạn muốn xem gì?</h2>
+    <p>Kể thể loại, tâm trạng, hay một bộ phim bạn từng thích. Mình sẽ gợi ý kèm lý do.</p>
+    <div class="chips" style="justify-content:center">${FALLBACK.chips.map(t => `<button class="chip" data-act="ask" data-t="${t}">${t}</button>`).join('')}</div></div>`;
+  return `<div class="view" id="v-app">${TopBar()}
+  <div class="app ${S.lOff ? 'l-off' : ''} ${S.rOff ? 'r-off' : ''}">
+    <aside class="side side-l" aria-label="Lịch sử chat"><div class="side-in">
+      <div class="side-head"><span class="side-title">Lịch sử</span><button class="icon-btn" data-act="toggleL" aria-label="Thu gọn">${ic('close')}</button></div>
+      <div style="padding:0 14px 6px"><button class="btn btn-ghost btn-sm" style="width:100%" data-act="newchat">${ic('plus')} Cuộc trò chuyện mới</button></div>
+      <div class="side-scroll">
+        ${recent.length ? `<div class="group-label">Hôm nay</div>${recent.map(cv).join('')}` : ''}
+        ${older.length ? `<div class="group-label">Trước đó</div>${older.map(cv).join('')}` : ''}
+      </div>
+    </div></aside>
+
+    <section class="chat" aria-label="Chat với AI">
+      <div class="chat-bar">
+        <button class="icon-btn" data-act="toggleL" title="Lịch sử chat" aria-label="Bật/tắt lịch sử chat">${ic('history')}</button>
+        <div class="ttl">${c ? esc(c.title) : 'Cuộc trò chuyện mới'}</div>
+        <button class="icon-btn" data-act="newchat" title="Cuộc trò chuyện mới" aria-label="Cuộc trò chuyện mới">${ic('plus')}</button>
+        <button class="icon-btn" data-act="toggleR" title="Top 10 phim" aria-label="Bật/tắt top 10 phim">${ic('trend')}</button>
+      </div>
+      <div class="msgs"><div class="msgs-in">
+        ${c && c.msgs.length ? c.msgs.map((m, i) => m.role !== 'user' ? AiMsg(m) : S.editMsg === i
+          ? `<form class="u-edit" data-form="editMsg" data-i="${i}"><textarea id="em-t" aria-label="Sửa tin nhắn">${esc(m.text)}</textarea><div class="row"><button class="btn btn-ghost btn-sm" type="button" data-act="editMsgNo">Huỷ</button><button class="btn btn-primary btn-sm" type="submit">Gửi lại</button></div></form>`
+          : `<div class="u-row">${busy() ? '' : `<button class="icon-btn" data-act="editMsg" data-i="${i}" title="Sửa tin nhắn" aria-label="Sửa tin nhắn">${ic('pen')}</button>`}<div class="bubble-u">${esc(m.text)}</div></div>`).join('') : empty}
+      </div></div>
+      <div class="composer"><div class="composer-in">
+        <form class="box" data-form="chat"><textarea id="chat-q" rows="1" placeholder="Hỏi CineMind bất cứ điều gì về phim…" aria-label="Tin nhắn"></textarea><button class="send" type="submit" aria-label="Gửi" ${busy() ? 'disabled' : ''}>${ic('send')}</button></form>
+        ${S.user ? '' : `<div class="guest">Bạn đang chat với tư cách khách. <button data-act="login">Đăng nhập</button> để lưu phim, xem chi tiết và so sánh.</div>`}
+      </div></div>
+    </section>
+
+    <aside class="side side-r" aria-label="Top 10 phim"><div class="side-in">
+      <div class="side-head"><span class="side-title">Top 10 thịnh hành</span><button class="icon-btn" data-act="toggleR" aria-label="Thu gọn">${ic('close')}</button></div>
+      <div class="tabs" role="tablist">${[['week', 'Tuần này'], ['month', 'Tháng này']].map(([k, l]) => `<button role="tab" aria-selected="${S.tab === k}" class="${S.tab === k ? 'on' : ''}" data-act="tab" data-v="${k}">${l}</button>`).join('')}</div>
+      <div class="side-scroll">${TREND[S.tab].map((id, i) => { const m = byId[id]; return `<button class="rank" data-act="about" data-id="${id}"><span class="no">${i + 1}</span>${poster(m)}<span style="min-width:0"><div class="t">${esc(m.title)}</div><div class="m">${m.year} · ★ ${m.rating}</div></span></button>`; }).join('')}</div>
+      <div class="side-note">Bấm vào phim để AI giới thiệu trong khung chat.</div>
+    </div></aside>
+  </div></div>`;
+}
+
+function MyList() {
+  let body;
+  if (!S.user) body = `<div class="state"><span class="modal-ic" style="color:var(--accent)">${ic('lock')}</span><h2>Đăng nhập để xem My List</h2><p>Lưu phim từ khung chat, rồi so sánh hoặc tìm phim tương tự bằng AI.</p><button class="btn btn-primary" data-act="login">Đăng nhập</button></div>`;
+  else if (!S.list.length) body = `<div class="state"><h2>Danh sách đang trống</h2><p>Bấm "My List" trên bất kỳ phim nào AI gợi ý để lưu lại đây.</p><button class="btn btn-primary" data-act="go" data-v="app">Mở chat tìm phim</button></div>`;
+  else body = `<div class="grid">${S.list.map(id => { const m = byId[id], on = S.sel.includes(id); return `<div class="tile ${on ? 'sel' : ''}">
+      <button data-act="sel" data-id="${id}" style="position:relative;display:block;text-align:left" aria-pressed="${on}" aria-label="Chọn ${esc(m.title)}"><span class="tick"></span>${poster(m)}</button>
+      <h3>${esc(m.title)}</h3>
+      <div class="tile-row"><span class="meta">${m.year} · <span class="star">★ ${m.rating}</span></span><button class="linkish" data-act="detail" data-id="${id}">Chi tiết</button></div></div>`; }).join('')}</div>`;
+  const n = S.sel.length;
+  const bar = n ? `<div class="actionbar" role="toolbar" aria-label="Thao tác với phim đã chọn"><span class="n">Đã chọn <b>${n}</b></span>
+    <button class="btn btn-primary btn-sm" data-act="cmpSel" ${n < 2 || n > 3 ? 'disabled' : ''} title="Chọn 2–3 phim">${ic('compare')} So sánh</button>
+    <button class="btn btn-ghost btn-sm" data-act="simSel" ${n !== 1 ? 'disabled' : ''} title="Chọn đúng 1 phim">${ic('similar')} Tìm phim tương tự</button>
+    <button class="icon-btn" data-act="rmSel" title="Bỏ khỏi list" aria-label="Bỏ khỏi list">${ic('trash')}</button>
+    <button class="icon-btn" data-act="clearSel" title="Huỷ chọn" aria-label="Huỷ chọn">${ic('close')}</button></div>` : '';
+  return `<div class="view" id="v-list">${TopBar()}<main class="page">
+    <div class="page-head"><div><span class="eyebrow">My List${S.user ? ` · ${S.list.length} phim` : ''}</span><h1>Danh sách của tôi</h1>
+    <p>Chọn 1 phim để tìm phim tương tự, hoặc chọn 2–3 phim để AI so sánh.</p></div>
+    ${S.user && S.list.length ? `<span class="hint">${n === 1 ? 'Chọn thêm phim để so sánh' : n > 3 ? 'So sánh tối đa 3 phim' : n > 1 ? 'Tìm phim tương tự chỉ áp dụng cho 1 phim' : 'Bấm vào poster để chọn'}</span>` : ''}</div>
+    ${body}</main>${bar}</div>`;
+}
+
+function Login() {
+  const tiles = [...MOVIES, ...MOVIES.slice(0, 9)].map(poster).join('');
+  return `<main class="view" id="v-login">
+    <div class="login-art"><div class="mosaic" aria-hidden="true">${tiles}</div>
+      <blockquote>Lưu phim, so sánh và tìm phim tương tự trong một tài khoản.</blockquote></div>
+    <div class="login-form"><form data-form="login" novalidate>
+      ${Logo()}
+      <h1>Đăng nhập</h1>
+      <p class="sub">Để lưu phim, xem chi tiết và dùng công cụ so sánh.</p>
+      <label class="field" for="em">Email<input id="em" type="email" placeholder="ban@email.com" autocomplete="email"></label>
+      <label class="field" for="pw">Mật khẩu<input id="pw" type="password" placeholder="Tối thiểu 6 ký tự" autocomplete="current-password"></label>
+      ${S.loginErr ? `<p class="err" role="alert">${esc(S.loginErr)}</p>` : ''}
+      <button class="btn btn-primary" type="submit">Đăng nhập</button>
+      <div class="or">hoặc</div>
+      <button class="btn btn-ghost" type="button" data-act="demo">Dùng tài khoản demo</button>
+      <button class="linkish" type="button" data-act="go" data-v="app" style="justify-self:center">Tiếp tục chat không cần đăng nhập</button>
+    </form></div></main>`;
+}
+
+function overlays() {
+  let h = '';
+  const en = S.anim ? ' enter' : '';
+  if (S.modal) h += `<div class="scrim${en}" data-act="closeModal"></div><div class="modal${en}" role="dialog" aria-modal="true" aria-labelledby="mt">
+    <span class="ic">${ic('lock')}</span><h2 id="mt">Đăng nhập để ${esc(S.modal)}</h2>
+    <p>Chat thì không cần tài khoản. Lưu phim, xem chi tiết, so sánh và tìm phim tương tự cần đăng nhập để AI nhớ gu của bạn.</p>
+    <div class="row"><button class="btn btn-ghost" data-act="closeModal">Để sau</button><button class="btn btn-primary" data-act="login">Đăng nhập</button></div></div>`;
+  if (S.drawer) {
+    const m = byId[S.drawer], inList = S.list.includes(m.id);
+    h += `<div class="scrim${en}" data-act="closeDrawer"></div><aside class="drawer${en}" role="dialog" aria-modal="true" aria-label="Chi tiết ${esc(m.title)}">
+      <button class="icon-btn d-close" data-act="closeDrawer" aria-label="Đóng">${ic('close')}</button>
+      <div class="d-hero" style="--h:${m.hue}">${poster(m)}<div style="display:grid;gap:8px;min-width:0"><span class="eyebrow">${m.genres[0]}</span><h2>${esc(m.title)}</h2><div class="meta">${metaLine(m)}</div></div></div>
+      <div class="d-body">
+        <div class="d-acts">
+          <button class="btn ${inList ? 'btn-ghost' : 'btn-primary'} btn-sm" data-act="add" data-id="${m.id}">${ic(inList ? 'check' : 'plus')} ${inList ? 'Đã lưu vào My List' : 'Thêm vào My List'}</button>
+          <button class="btn btn-ghost btn-sm" data-act="askAbout" data-id="${m.id}">${ic('chat')} Hỏi AI về phim này</button>
+          <a class="btn btn-ghost btn-sm" href="https://www.youtube.com/results?search_query=${encodeURIComponent(m.title + ' trailer')}" target="_blank" rel="noopener">${ic('play')} Trailer</a>
+        </div>
+        <div class="facts"><div><b class="mono">★ ${m.rating}</b><span>Điểm khán giả</span></div><div><b class="mono">${m.runtime}′</b><span>Thời lượng</span></div><div><b class="mono">${m.year}</b><span>Phát hành</span></div></div>
+        <div class="d-sec"><h4>Nội dung</h4><p>${esc(m.overview)}</p></div>
+        <div class="d-sec"><h4>AI tóm tắt review</h4><p>Khán giả đánh giá phim ${m.mood.toLowerCase()}. Điểm được khen nhiều nhất là cách phim khai thác chủ đề ${m.keywords[0]} và ${m.keywords[1]}. Một số người thấy nhịp phim ${m.runtime > 140 ? 'hơi dài' : 'gọn gàng'} với thời lượng ${m.runtime} phút.</p></div>
+        <div class="d-sec"><h4>Đạo diễn & diễn viên</h4><div class="tags"><span class="tag" style="color:var(--fg)">${esc(m.director)}</span>${m.cast.map(c => `<span class="tag">${esc(c)}</span>`).join('')}</div></div>
+        <div class="d-sec"><h4>Thể loại & từ khoá</h4><div class="tags">${[...m.genres, ...m.keywords].map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div></div>
+        <div class="d-sec"><h4>Phim tương tự</h4><div class="simlist">${similarTo([m.id], 4).map(({ id, sim }) => `<button class="simitem" data-act="detailNav" data-id="${id}">${poster(byId[id])}<span style="min-width:0"><div style="font-weight:600;font-size:14px">${esc(byId[id].title)}</div><div class="meta">${byId[id].year} · ${esc(byId[id].director)}</div></span><b>${sim.score}%</b></button>`).join('')}</div></div>
+      </div></aside>`;
+  }
+  return h;
+}
+
+/* ================= Actions ================= */
+function gate(label, fn) { if (S.user) fn(); else { S.modal = label; S.pending = fn; S.back = S.view; S.anim = true; renderOv(); } }
+function newConv() { const c = { id: uid(), title: 'Cuộc trò chuyện mới', msgs: [] }; S.convs.unshift(c); S.cur = c.id; return c; }
+function send(inp) {
+  if (S.view !== 'app') { S.view = 'app'; try { history.replaceState(null, '', '#app'); } catch {} }
+  S.drawer = null;
+  if (busy()) return;
+  let c = conv(); if (!c) c = newConv();
+  if (!c.msgs.length) c.title = labelOf(inp).slice(0, 60);
+  S.convs = [c, ...S.convs.filter(x => x !== c)];
+  c.msgs.push({ role: 'user', text: labelOf(inp) });
+  const ai = { role: 'ai', done: false, step: 0, ...respond(inp) };
+  c.msgs.push(ai); S.scroll = true; render();
+  const tick = () => {
+    ai.step++;
+    if (ai.step >= ai.steps.length) { ai.done = true; save(); }
+    S.scroll = true; render();
+    if (!ai.done) setTimeout(tick, 480);
+  };
+  setTimeout(tick, 480);
+}
+function doLogin(name, email) {
+  S.user = { name, email };
+  if (!S.list.length) S.list = [27205, 666277, 496243, 329865, 313369];
+  S.loginErr = ''; S.modal = null; save();
+  const p = S.pending; S.pending = null;
+  go(S.back === 'login' || S.back === 'landing' ? 'app' : S.back);
+  toast(`Xin chào ${name}! My List đã có sẵn vài phim mẫu.`);
+  if (p) p();
+}
+function addToList(id) {
+  if (S.list.includes(id)) { S.list = S.list.filter(x => x !== id); toast(`Đã bỏ ${byId[id].title} khỏi My List`); }
+  else { S.list = [id, ...S.list]; toast(`Đã thêm ${byId[id].title} vào My List`); }
+  save(); render();
+}
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const a = el.dataset.act, id = +el.dataset.id;
+  switch (a) {
+    case 'go': go(el.dataset.v); break;
+    case 'gotoList': S.sel = []; go('list'); break;
+    case 'login': S.back = S.view === 'login' ? S.back : S.view; S.modal = null; go('login'); break;
+    case 'logout': S.user = null; S.sel = []; save(); toast('Đã đăng xuất'); break;
+    case 'demo': doLogin('Minh Anh', 'demo@cinemind.vn'); break;
+    case 'ask': send({ text: el.dataset.t }); break;
+    case 'about': if (innerWidth <= 1080) S.rOff = true; send({ type: 'about', id }); break;
+    case 'add': gate('lưu phim vào My List', () => addToList(id)); break;
+    case 'detail': gate('xem chi tiết phim', () => openDrawer(id)); break;
+    case 'detailNav': S.drawer = id; renderOv(); ovEl.querySelector('.drawer')?.scrollTo({ top: 0, behavior: 'smooth' }); break;
+    case 'similar': gate('tìm phim tương tự', () => send({ type: 'similar', ids: [id] })); break;
+    case 'askAbout': send({ type: 'about', id }); break;
+    case 'closeModal': closeModal(); break;
+    case 'closeDrawer': closeDrawer(); break;
+    case 'newchat': S.cur = null; S.editMsg = null; if (innerWidth <= 1080) S.lOff = true; render(); break;
+    case 'conv': S.cur = el.dataset.id; S.editMsg = null; if (innerWidth <= 1080) S.lOff = true; S.scroll = true; render(); break;
+    case 'renameConv': S.renaming = el.dataset.id; S.deleting = null; S.focusNext = true; render(); break;
+    case 'delConv': S.deleting = el.dataset.id; S.renaming = null; render(); break;
+    case 'delConvNo': S.deleting = null; render(); break;
+    case 'delConvYes': { const cid = el.dataset.id; S.convs = S.convs.filter(x => x.id !== cid); if (S.cur === cid) S.cur = S.convs[0]?.id ?? null; S.deleting = null; save(); toast('Đã xoá cuộc trò chuyện'); break; }
+    case 'editMsg': S.editMsg = +el.dataset.i; S.focusNext = true; render(); break;
+    case 'editMsgNo': S.editMsg = null; render(); break;
+    case 'tab': S.tab = el.dataset.v; render(); break;
+    case 'toggleL': S.lOff = !S.lOff; if (innerWidth <= 1080 && !S.lOff) S.rOff = true; render(); break;
+    case 'toggleR': S.rOff = !S.rOff; if (innerWidth <= 1080 && !S.rOff) S.lOff = true; render(); break;
+    case 'sel': S.sel = S.sel.includes(id) ? S.sel.filter(x => x !== id) : [...S.sel, id]; render(); break;
+    case 'clearSel': S.sel = []; render(); break;
+    case 'rmSel': { const n = S.sel.length; S.list = S.list.filter(x => !S.sel.includes(x)); S.sel = []; save(); toast(`Đã bỏ ${n} phim khỏi My List`); break; }
+    case 'cmpSel': { const ids = S.sel; S.sel = []; S.cur = null; send({ type: 'compare', ids }); break; }
+    case 'simSel': { const ids = S.sel; S.sel = []; S.cur = null; send({ type: 'similar', ids }); break; }
+  }
+});
+document.addEventListener('submit', e => {
+  e.preventDefault();
+  const f = e.target.dataset.form;
+  if (f === 'hero') { const q = document.getElementById('hero-q').value.trim(); S.cur = null; if (q) send({ text: q }); else go('app'); }
+  if (f === 'rename') { const v = document.getElementById('rn').value.trim(); const c = S.convs.find(x => x.id === e.target.dataset.id); if (c && v) c.title = v; S.renaming = null; save(); render(); return; }
+  if (f === 'editMsg') { const v = document.getElementById('em-t').value.trim(); if (!v) return; conv().msgs.length = +e.target.dataset.i; S.editMsg = null; send({ text: v }); return; }
+  if (f === 'chat') { const t = document.getElementById('chat-q'); const q = t.value.trim(); if (q) { t.value = ''; send({ text: q }); } }
+  if (f === 'login') {
+    const em = document.getElementById('em').value.trim(), pw = document.getElementById('pw').value;
+    if (!/^\S+@\S+\.\S+$/.test(em)) S.loginErr = 'Email chưa đúng định dạng, ví dụ ban@email.com.';
+    else if (pw.length < 6) S.loginErr = 'Mật khẩu cần tối thiểu 6 ký tự.';
+    else return doLogin(em.split('@')[0], em);
+    render(); document.getElementById('em').value = em;
+  }
+});
+document.addEventListener('keydown', e => {
+  if (e.target.id === 'chat-q' && e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); e.target.form.requestSubmit(); }
+  if (e.key === 'Escape') { if (S.drawer) closeDrawer(); else if (S.modal) closeModal(); else if (S.renaming || S.deleting || S.editMsg != null) { S.renaming = null; S.deleting = null; S.editMsg = null; render(); } }
+  if (e.target.id === 'em-t' && e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); e.target.form.requestSubmit(); }
+});
+document.addEventListener('input', e => { if (e.target.id === 'chat-q') { e.target.style.height = 'auto'; e.target.style.height = Math.min(e.target.scrollHeight, 140) + 'px'; } });
+
+const h0 = location.hash.slice(1);
+S.view = ['app', 'list', 'login'].includes(h0) ? h0 : 'landing';
+S.scroll = true; render();
+</script>

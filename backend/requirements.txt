@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+httpx
+numpy
+psycopg[binary]
+psycopg-pool
+pgvector
+python-dotenv
+# Optional - only for EMBED_MODEL=bge-m3 (local, ~2 GB):
+# torch
+# FlagEmbedding

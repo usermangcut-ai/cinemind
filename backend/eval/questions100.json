@@ -1,0 +1,506 @@
+[
+ {
+  "id": "ref-01",
+  "group": "giống phim X",
+  "q": "phim giống Interstellar"
+ },
+ {
+  "id": "ref-02",
+  "group": "giống phim X",
+  "q": "có phim nào kiểu Inception không"
+ },
+ {
+  "id": "ref-03",
+  "group": "giống phim X",
+  "q": "thích Parasite thì nên xem gì tiếp"
+ },
+ {
+  "id": "ref-04",
+  "group": "giống phim X",
+  "q": "phim giống The Shawshank Redemption"
+ },
+ {
+  "id": "ref-05",
+  "group": "giống phim X",
+  "q": "mới xem Oppenheimer xong, muốn tìm phim tương tự"
+ },
+ {
+  "id": "ref-06",
+  "group": "giống phim X",
+  "q": "phim kiểu La La Land"
+ },
+ {
+  "id": "ref-07",
+  "group": "giống phim X",
+  "q": "phim giống Your Name"
+ },
+ {
+  "id": "ref-08",
+  "group": "giống phim X",
+  "q": "phim như Knives Out, trinh thám vui vui"
+ },
+ {
+  "id": "ref-09",
+  "group": "giống phim X",
+  "q": "phim giống John Wick nhưng ít máu me hơn"
+ },
+ {
+  "id": "ref-10",
+  "group": "giống phim X",
+  "q": "phim giống Mad Max Fury Road"
+ },
+ {
+  "id": "ref-11",
+  "group": "giống phim X",
+  "q": "phim giống Hai Phượng"
+ },
+ {
+  "id": "ref-12",
+  "group": "giống phim X",
+  "q": "phim tương tự Whiplash"
+ },
+ {
+  "id": "ref-13",
+  "group": "giống phim X",
+  "q": "phim giống Get Out"
+ },
+ {
+  "id": "ref-14",
+  "group": "giống phim X",
+  "q": "phim giống Spirited Away cho trẻ con"
+ },
+ {
+  "id": "ref-15",
+  "group": "giống phim X",
+  "q": "phim kiểu The Social Network"
+ },
+ {
+  "id": "ref-16",
+  "group": "giống phim X",
+  "q": "phim giống Before Sunrise"
+ },
+ {
+  "id": "ref-17",
+  "group": "giống phim X",
+  "q": "phim như Everything Everywhere All at Once"
+ },
+ {
+  "id": "ref-18",
+  "group": "giống phim X",
+  "q": "phim giống Joker"
+ },
+ {
+  "id": "ref-19",
+  "group": "giống phim X",
+  "q": "phim giống Dune nhưng ngắn hơn"
+ },
+ {
+  "id": "mood-01",
+  "group": "tâm trạng / cảm xúc",
+  "q": "phim làm mình khóc hết nước mắt"
+ },
+ {
+  "id": "mood-02",
+  "group": "tâm trạng / cảm xúc",
+  "q": "đang buồn, cần phim chữa lành nhẹ nhàng"
+ },
+ {
+  "id": "mood-03",
+  "group": "tâm trạng / cảm xúc",
+  "q": "phim feel good xem xong thấy yêu đời"
+ },
+ {
+  "id": "mood-04",
+  "group": "tâm trạng / cảm xúc",
+  "q": "phim ám ảnh, xem xong mất ngủ mấy ngày"
+ },
+ {
+  "id": "mood-05",
+  "group": "tâm trạng / cảm xúc",
+  "q": "phim xoắn não, twist cuối bất ngờ"
+ },
+ {
+  "id": "mood-06",
+  "group": "tâm trạng / cảm xúc",
+  "q": "phim hồi hộp nghẹt thở từ đầu đến cuối"
+ },
+ {
+  "id": "mood-07",
+  "group": "tâm trạng / cảm xúc",
+  "q": "phim cười đau bụng"
+ },
+ {
+  "id": "mood-08",
+  "group": "tâm trạng / cảm xúc",
+  "q": "phim truyền động lực, xem xong muốn cố gắng"
+ },
+ {
+  "id": "mood-09",
+  "group": "tâm trạng / cảm xúc",
+  "q": "phim chậm, đẹp, nhiều khoảng lặng"
+ },
+ {
+  "id": "mood-10",
+  "group": "tâm trạng / cảm xúc",
+  "q": "phim lãng mạn ngọt ngào, không drama"
+ },
+ {
+  "id": "mood-11",
+  "group": "tâm trạng / cảm xúc",
+  "q": "phim u tối, nặng nề về tâm lý con người"
+ },
+ {
+  "id": "mood-12",
+  "group": "tâm trạng / cảm xúc",
+  "q": "phim hoài niệm tuổi học trò"
+ },
+ {
+  "id": "mood-13",
+  "group": "tâm trạng / cảm xúc",
+  "q": "phim kinh dị thật sự đáng sợ"
+ },
+ {
+  "id": "mood-15",
+  "group": "tâm trạng / cảm xúc",
+  "q": "phim cảm động về tình cha con"
+ },
+ {
+  "id": "plot-01",
+  "group": "mô tả cốt truyện / chủ đề",
+  "q": "phim về một người mất trí nhớ phải tìm lại chính mình"
+ },
+ {
+  "id": "plot-02",
+  "group": "mô tả cốt truyện / chủ đề",
+  "q": "phim về AI có ý thức, phản bội con người"
+ },
+ {
+  "id": "plot-03",
+  "group": "mô tả cốt truyện / chủ đề",
+  "q": "phim về một nhóm người bị mắc kẹt và phải sinh tồn"
+ },
+ {
+  "id": "plot-04",
+  "group": "mô tả cốt truyện / chủ đề",
+  "q": "phim về vụ cướp ngân hàng được lên kế hoạch tinh vi"
+ },
+ {
+  "id": "plot-05",
+  "group": "mô tả cốt truyện / chủ đề",
+  "q": "phim về vòng lặp thời gian, sống lại một ngày nhiều lần"
+ },
+ {
+  "id": "plot-06",
+  "group": "mô tả cốt truyện / chủ đề",
+  "q": "phim về hành trình trưởng thành của một cậu bé"
+ },
+ {
+  "id": "plot-07",
+  "group": "mô tả cốt truyện / chủ đề",
+  "q": "phim về người nghệ sĩ theo đuổi đam mê đến mức ám ảnh"
+ },
+ {
+  "id": "plot-08",
+  "group": "mô tả cốt truyện / chủ đề",
+  "q": "phim về đầu bếp và ẩm thực"
+ },
+ {
+  "id": "plot-09",
+  "group": "mô tả cốt truyện / chủ đề",
+  "q": "phim về luật sư, phiên toà căng thẳng"
+ },
+ {
+  "id": "plot-10",
+  "group": "mô tả cốt truyện / chủ đề",
+  "q": "phim về thế giới hậu tận thế"
+ },
+ {
+  "id": "con-01",
+  "group": "ràng buộc rõ (filter)",
+  "q": "phim hành động Hàn Quốc từ 2018"
+ },
+ {
+  "id": "con-02",
+  "group": "ràng buộc rõ (filter)",
+  "q": "phim hoạt hình dưới 90 phút"
+ },
+ {
+  "id": "con-03",
+  "group": "ràng buộc rõ (filter)",
+  "q": "phim kinh dị Nhật Bản"
+ },
+ {
+  "id": "con-04",
+  "group": "ràng buộc rõ (filter)",
+  "q": "phim tình cảm thập niên 90"
+ },
+ {
+  "id": "con-05",
+  "group": "ràng buộc rõ (filter)",
+  "q": "phim khoa học viễn tưởng dưới 2 tiếng"
+ },
+ {
+  "id": "con-06",
+  "group": "ràng buộc rõ (filter)",
+  "q": "phim Việt Nam hay gần đây"
+ },
+ {
+  "id": "con-07",
+  "group": "ràng buộc rõ (filter)",
+  "q": "phim chiến tranh trước năm 2000"
+ },
+ {
+  "id": "con-08",
+  "group": "ràng buộc rõ (filter)",
+  "q": "phim tài liệu về thiên nhiên"
+ },
+ {
+  "id": "con-09",
+  "group": "ràng buộc rõ (filter)",
+  "q": "phim hài Ấn Độ"
+ },
+ {
+  "id": "con-10",
+  "group": "ràng buộc rõ (filter)",
+  "q": "phim Pháp lãng mạn"
+ },
+ {
+  "id": "con-11",
+  "group": "ràng buộc rõ (filter)",
+  "q": "phim Trung Quốc võ thuật"
+ },
+ {
+  "id": "con-12",
+  "group": "ràng buộc rõ (filter)",
+  "q": "phim tội phạm từ 2020 trở lại đây"
+ },
+ {
+  "id": "ctx-01",
+  "group": "hoàn cảnh xem",
+  "q": "phim xem cùng người yêu tối thứ bảy"
+ },
+ {
+  "id": "ctx-02",
+  "group": "hoàn cảnh xem",
+  "q": "phim cả nhà xem được, có trẻ con 8 tuổi"
+ },
+ {
+  "id": "ctx-03",
+  "group": "hoàn cảnh xem",
+  "q": "phim xem với hội bạn, vui vẻ náo nhiệt"
+ },
+ {
+  "id": "ctx-04",
+  "group": "hoàn cảnh xem",
+  "q": "phim xem một mình lúc nửa đêm"
+ },
+ {
+  "id": "ctx-05",
+  "group": "hoàn cảnh xem",
+  "q": "phim ngắn ngắn xem trong giờ nghỉ trưa"
+ },
+ {
+  "id": "ctx-06",
+  "group": "hoàn cảnh xem",
+  "q": "phim xem dịp Giáng sinh"
+ },
+ {
+  "id": "ctx-07",
+  "group": "hoàn cảnh xem",
+  "q": "phim để luyện nghe tiếng Anh, nói rõ, dễ hiểu"
+ },
+ {
+  "id": "mix-01",
+  "group": "pha trộn nhiều phim",
+  "q": "phim vừa giống Inception vừa giống The Matrix"
+ },
+ {
+  "id": "mix-02",
+  "group": "pha trộn nhiều phim",
+  "q": "phim pha trộn giữa Harry Potter và Lord of the Rings"
+ },
+ {
+  "id": "mix-03",
+  "group": "pha trộn nhiều phim",
+  "q": "phim kết hợp hài kiểu Deadpool với hành động kiểu John Wick"
+ },
+ {
+  "id": "mix-04",
+  "group": "pha trộn nhiều phim",
+  "q": "phim giống Parasite nhưng không khí nhẹ như Shoplifters"
+ },
+ {
+  "id": "mix-05",
+  "group": "pha trộn nhiều phim",
+  "q": "phim tình cảm kiểu Titanic mà kết có hậu"
+ },
+ {
+  "id": "neg-01",
+  "group": "loại trừ",
+  "q": "phim hành động nhưng không phải siêu anh hùng"
+ },
+ {
+  "id": "neg-02",
+  "group": "loại trừ",
+  "q": "phim tình cảm không sến, không kết buồn"
+ },
+ {
+  "id": "neg-03",
+  "group": "loại trừ",
+  "q": "phim khoa học viễn tưởng không kinh dị"
+ },
+ {
+  "id": "neg-04",
+  "group": "loại trừ",
+  "q": "phim hay mà không phải phim Mỹ"
+ },
+ {
+  "id": "neg-05",
+  "group": "loại trừ",
+  "q": "phim hồi hộp nhưng không có cảnh máu me"
+ },
+ {
+  "id": "neg-06",
+  "group": "loại trừ",
+  "q": "phim hoạt hình nhưng không phải Disney"
+ },
+ {
+  "id": "vague-01",
+  "group": "mơ hồ",
+  "q": "phim hay"
+ },
+ {
+  "id": "vague-02",
+  "group": "mơ hồ",
+  "q": "tối nay xem gì"
+ },
+ {
+  "id": "vague-03",
+  "group": "mơ hồ",
+  "q": "gợi ý vài phim kinh điển ai cũng nên xem"
+ },
+ {
+  "id": "tv-01",
+  "group": "series",
+  "q": "phim bộ giống Breaking Bad"
+ },
+ {
+  "id": "tv-02",
+  "group": "series",
+  "q": "series Hàn Quốc hay về điều tra tội phạm"
+ },
+ {
+  "id": "tv-03",
+  "group": "series",
+  "q": "phim giống Trò chơi con mực"
+ },
+ {
+  "id": "tv-04",
+  "group": "series",
+  "q": "series hài kiểu Friends"
+ },
+ {
+  "id": "tv-05",
+  "group": "series",
+  "q": "phim giống Game of Thrones"
+ },
+ {
+  "id": "tv-06",
+  "group": "series",
+  "q": "series ngắn tập, cày một cuối tuần là xong"
+ },
+ {
+  "id": "tv-07",
+  "group": "series",
+  "q": "phim lẻ giống Stranger Things"
+ },
+ {
+  "id": "tv-08",
+  "group": "series",
+  "q": "phim bộ Nhật Bản tâm lý"
+ },
+ {
+  "id": "person-01",
+  "group": "theo người",
+  "q": "phim của Christopher Nolan"
+ },
+ {
+  "id": "person-02",
+  "group": "theo người",
+  "q": "phim có Leonardo DiCaprio đóng"
+ },
+ {
+  "id": "person-03",
+  "group": "theo người",
+  "q": "phim của đạo diễn Bong Joon-ho"
+ },
+ {
+  "id": "person-04",
+  "group": "theo người",
+  "q": "phim hay nhất của Tom Hanks"
+ },
+ {
+  "id": "vn-01",
+  "group": "cách gõ Việt (không dấu, sai, lóng)",
+  "q": "phim giong ky sinh trung"
+ },
+ {
+  "id": "vn-02",
+  "group": "cách gõ Việt (không dấu, sai, lóng)",
+  "q": "phim kinh di han quoc hay"
+ },
+ {
+  "id": "vn-03",
+  "group": "cách gõ Việt (không dấu, sai, lóng)",
+  "q": "phim giống intersteller"
+ },
+ {
+  "id": "vn-04",
+  "group": "cách gõ Việt (không dấu, sai, lóng)",
+  "q": "phim gì cuốn cuốn xem 1 lèo không dứt ra được"
+ },
+ {
+  "id": "vn-05",
+  "group": "cách gõ Việt (không dấu, sai, lóng)",
+  "q": "phim nào đỉnh nóc kịch trần thể loại hành động"
+ },
+ {
+  "id": "vn-06",
+  "group": "cách gõ Việt (không dấu, sai, lóng)",
+  "q": "phim tâm lý tình cảm hàn xẻng"
+ },
+ {
+  "id": "vn-07",
+  "group": "cách gõ Việt (không dấu, sai, lóng)",
+  "q": "phim giống hố đen tử thần"
+ },
+ {
+  "id": "vn-08",
+  "group": "cách gõ Việt (không dấu, sai, lóng)",
+  "q": "cho xin vài bộ anime buồn"
+ },
+ {
+  "id": "fu-01",
+  "group": "hỏi tiếp (lượt 2)",
+  "prev": "phim hành động hay",
+  "q": "ngắn hơn 2 tiếng thôi"
+ },
+ {
+  "id": "fu-02",
+  "group": "hỏi tiếp (lượt 2)",
+  "prev": "phim kinh dị Hàn Quốc",
+  "q": "thế còn phim Nhật thì sao"
+ },
+ {
+  "id": "fu-03",
+  "group": "hỏi tiếp (lượt 2)",
+  "prev": "phim giống Interstellar",
+  "q": "cái nào nhẹ nhàng hơn chút"
+ },
+ {
+  "id": "fu-04",
+  "group": "hỏi tiếp (lượt 2)",
+  "prev": "phim tình cảm từ 2015",
+  "q": "bỏ điều kiện năm đi"
+ }
+]

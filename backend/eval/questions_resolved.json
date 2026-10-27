@@ -1,0 +1,988 @@
+[
+ {
+  "id": "mood-01",
+  "type": "mood",
+  "q": "phim buồn, chậm, ám ảnh về tình mẹ con và thời gian",
+  "expect": [
+   "Arrival (2016)",
+   "Interstellar (2014)",
+   "Manchester by the Sea (2016)",
+   "The Father (2020)"
+  ],
+  "expect_ids": [
+   329865,
+   157336,
+   334541,
+   600354
+  ]
+ },
+ {
+  "id": "mood-02",
+  "type": "mood",
+  "q": "phim xoắn não, nhiều tầng, xem xong muốn xem lại",
+  "expect": [
+   "Inception (2010)",
+   "Memento (2000)",
+   "The Prestige (2006)",
+   "Shutter Island (2010)",
+   "Tenet (2020)",
+   "Predestination (2014)",
+   "Coherence (2013)"
+  ],
+  "expect_ids": [
+   27205,
+   77,
+   1124,
+   11324,
+   577922,
+   206487,
+   220289
+  ]
+ },
+ {
+  "id": "mood-03",
+  "type": "mood",
+  "q": "phim nhẹ nhàng chữa lành, xem cuối tuần cho thư giãn",
+  "expect": [
+   "Paddington 2 (2017)",
+   "The Secret Life of Walter Mitty (2013)",
+   "Little Forest (2018)",
+   "Chef (2014)",
+   "Perfect Days (2023)",
+   "Amélie (2001)"
+  ],
+  "expect_ids": [
+   346648,
+   116745,
+   212778,
+   976893,
+   194
+  ]
+ },
+ {
+  "id": "mood-04",
+  "type": "mood",
+  "q": "phim hài cười thả ga cho cả nhóm bạn",
+  "expect": [
+   "The Hangover (2009)",
+   "Superbad (2007)",
+   "21 Jump Street (2012)",
+   "Game Night (2018)",
+   "Bridesmaids (2011)",
+   "We're the Millers (2013)"
+  ],
+  "filters": {
+   "genres": [
+    "Comedy"
+   ]
+  },
+  "expect_ids": [
+   18785,
+   8363,
+   64688,
+   445571,
+   55721,
+   138832
+  ]
+ },
+ {
+  "id": "mood-05",
+  "type": "mood",
+  "q": "phim kinh dị tâm lý, không jump scare nhưng càng nghĩ càng rợn",
+  "expect": [
+   "Hereditary (2018)",
+   "Get Out (2017)",
+   "The Babadook (2014)",
+   "The Witch (2015)",
+   "Midsommar (2019)",
+   "It Follows (2014)",
+   "Rosemary's Baby (1968)"
+  ],
+  "filters": {
+   "genres": [
+    "Horror"
+   ]
+  },
+  "expect_ids": [
+   493922,
+   419430,
+   242224,
+   310131,
+   530385,
+   270303,
+   805
+  ]
+ },
+ {
+  "id": "mood-06",
+  "type": "mood",
+  "q": "phim tình cảm lãng mạn mà buồn, kết không có hậu",
+  "expect": [
+   "La La Land (2016)",
+   "Past Lives (2023)",
+   "Blue Valentine (2010)",
+   "Eternal Sunshine of the Spotless Mind (2004)",
+   "Before Sunrise (1995)",
+   "The Notebook (2004)",
+   "Call Me by Your Name (2017)"
+  ],
+  "filters": {
+   "genres": [
+    "Romance"
+   ]
+  },
+  "expect_ids": [
+   313369,
+   666277,
+   46705,
+   38,
+   76,
+   11036,
+   398818
+  ]
+ },
+ {
+  "id": "mood-07",
+  "type": "mood",
+  "q": "phim truyền cảm hứng về theo đuổi đam mê, áp lực luyện tập",
+  "expect": [
+   "Whiplash (2014)",
+   "Rocky (1976)",
+   "Black Swan (2010)",
+   "The Pursuit of Happyness (2006)",
+   "Ford v Ferrari (2019)",
+   "Rush (2013)"
+  ],
+  "expect_ids": [
+   244786,
+   1366,
+   44214,
+   1402,
+   359724,
+   96721
+  ]
+ },
+ {
+  "id": "mood-08",
+  "type": "mood",
+  "q": "phim hành động mãn nhãn, rượt đuổi liên tục không ngừng nghỉ",
+  "expect": [
+   "Mad Max: Fury Road (2015)",
+   "John Wick (2014)",
+   "The Raid (2011)",
+   "Mission: Impossible - Fallout (2018)",
+   "Baby Driver (2017)",
+   "Top Gun: Maverick (2022)"
+  ],
+  "filters": {
+   "genres": [
+    "Action"
+   ]
+  },
+  "expect_ids": [
+   76341,
+   245891,
+   94329,
+   353081,
+   339403,
+   361743
+  ]
+ },
+ {
+  "id": "mood-09",
+  "type": "mood",
+  "q": "phim về trí tuệ nhân tạo, robot có cảm xúc, câu hỏi thế nào là con người",
+  "expect": [
+   "Ex Machina (2015)",
+   "Her (2013)",
+   "Blade Runner 2049 (2017)",
+   "A.I. Artificial Intelligence (2001)",
+   "WALL·E (2008)",
+   "Blade Runner (1982)",
+   "The Creator (2023)"
+  ],
+  "expect_ids": [
+   264660,
+   152601,
+   335984,
+   644,
+   10681,
+   78,
+   670292
+  ]
+ },
+ {
+  "id": "mood-10",
+  "type": "mood",
+  "q": "phim gia đình cảm động, cả nhà xem được, có thể khóc",
+  "expect": [
+   "Coco (2017)",
+   "Inside Out (2015)",
+   "Up (2009)",
+   "Wonder (2017)",
+   "Inside Out 2 (2024)",
+   "The Lion King (1994)"
+  ],
+  "filters": {
+   "genres": [
+    "Family"
+   ]
+  },
+  "allow_extra": [
+   "certification_max"
+  ],
+  "expect_ids": [
+   354912,
+   150540,
+   14160,
+   406997,
+   1022789,
+   8587
+  ]
+ },
+ {
+  "id": "mood-11",
+  "type": "mood",
+  "q": "phim trinh thám phá án, đoán hung thủ đến phút cuối",
+  "expect": [
+   "Knives Out (2019)",
+   "Glass Onion: A Knives Out Mystery (2022)",
+   "Gone Girl (2014)",
+   "Zodiac (2007)",
+   "Prisoners (2013)",
+   "Murder on the Orient Express (2017)",
+   "Se7en (1995)"
+  ],
+  "allow_extra": [
+   "genres"
+  ],
+  "expect_ids": [
+   546554,
+   661374,
+   210577,
+   1949,
+   146233,
+   392044,
+   807
+  ]
+ },
+ {
+  "id": "mood-12",
+  "type": "mood",
+  "q": "phim châm biếm xã hội, phân biệt giàu nghèo",
+  "expect": [
+   "Parasite (2019)",
+   "Triangle of Sadness (2022)",
+   "The Menu (2022)",
+   "Snowpiercer (2013)",
+   "Joker (2019)"
+  ],
+  "expect_ids": [
+   496243,
+   497828,
+   593643,
+   110415,
+   475557
+  ]
+ },
+ {
+  "id": "mood-13",
+  "type": "mood",
+  "q": "phim về không gian, du hành vũ trụ, cô đơn giữa vũ trụ",
+  "expect": [
+   "Interstellar (2014)",
+   "Gravity (2013)",
+   "The Martian (2015)",
+   "Ad Astra (2019)",
+   "Moon (2009)",
+   "2001: A Space Odyssey (1968)",
+   "First Man (2018)"
+  ],
+  "expect_ids": [
+   157336,
+   49047,
+   286217,
+   419704,
+   17431,
+   62,
+   369972
+  ]
+ },
+ {
+  "id": "mood-14",
+  "type": "mood",
+  "q": "phim chiến tranh chân thực, khốc liệt",
+  "expect": [
+   "Saving Private Ryan (1998)",
+   "1917 (2019)",
+   "Dunkirk (2017)",
+   "Hacksaw Ridge (2016)",
+   "All Quiet on the Western Front (2022)",
+   "Come and See (1985)",
+   "Full Metal Jacket (1987)"
+  ],
+  "filters": {
+   "genres": [
+    "War"
+   ]
+  },
+  "expect_ids": [
+   857,
+   530915,
+   374720,
+   324786,
+   49046,
+   25237,
+   600
+  ]
+ },
+ {
+  "id": "mood-15",
+  "type": "mood",
+  "q": "phim anime Nhật đẹp, mộng mơ, nhạc hay",
+  "expect": [
+   "Your Name. (2016)",
+   "Spirited Away (2001)",
+   "Weathering with You (2019)",
+   "Suzume (2022)",
+   "A Silent Voice (2016)",
+   "Howl's Moving Castle (2004)",
+   "The Boy and the Heron (2023)"
+  ],
+  "filters": {
+   "genres": [
+    "Animation"
+   ],
+   "countries": [
+    "JP"
+   ]
+  },
+  "expect_ids": [
+   372058,
+   129,
+   568160,
+   916224,
+   378064,
+   4935,
+   508883
+  ]
+ },
+ {
+  "id": "mood-16",
+  "type": "mood",
+  "q": "phim về băng đảng mafia, tội phạm có tổ chức",
+  "expect": [
+   "The Godfather (1972)",
+   "Goodfellas (1990)",
+   "The Departed (2006)",
+   "The Irishman (2019)",
+   "Scarface (1983)",
+   "Casino (1995)",
+   "The Godfather Part II (1974)"
+  ],
+  "allow_extra": [
+   "genres"
+  ],
+  "expect_ids": [
+   238,
+   769,
+   1422,
+   398978,
+   111,
+   524,
+   240
+  ]
+ },
+ {
+  "id": "mood-17",
+  "type": "mood",
+  "q": "phim siêu anh hùng nhưng u tối, nghiêm túc",
+  "expect": [
+   "The Dark Knight (2008)",
+   "Logan (2017)",
+   "The Batman (2022)",
+   "Joker (2019)",
+   "Watchmen (2009)",
+   "Batman Begins (2005)"
+  ],
+  "expect_ids": [
+   155,
+   263115,
+   414906,
+   475557,
+   13183,
+   272
+  ]
+ },
+ {
+  "id": "mood-18",
+  "type": "mood",
+  "q": "phim về du hành thời gian, vòng lặp thời gian",
+  "expect": [
+   "Groundhog Day (1993)",
+   "Edge of Tomorrow (2014)",
+   "Looper (2012)",
+   "Back to the Future (1985)",
+   "Predestination (2014)",
+   "Palm Springs (2020)",
+   "About Time (2013)",
+   "Tenet (2020)"
+  ],
+  "expect_ids": [
+   137,
+   137113,
+   59967,
+   105,
+   206487,
+   587792,
+   122906,
+   577922
+  ]
+ },
+ {
+  "id": "mood-19",
+  "type": "mood",
+  "q": "phim zombie, đại dịch, sinh tồn",
+  "expect": [
+   "Train to Busan (2016)",
+   "28 Days Later (2002)",
+   "World War Z (2013)",
+   "Zombieland (2009)",
+   "Dawn of the Dead (2004)",
+   "I Am Legend (2007)",
+   "#Alive (2020)"
+  ],
+  "expect_ids": [
+   396535,
+   170,
+   72190,
+   19908,
+   924,
+   6479,
+   614696
+  ]
+ },
+ {
+  "id": "mood-20",
+  "type": "mood",
+  "q": "phim tiểu sử thiên tài, nhà khoa học",
+  "expect": [
+   "Oppenheimer (2023)",
+   "The Imitation Game (2014)",
+   "A Beautiful Mind (2001)",
+   "The Theory of Everything (2014)",
+   "Hidden Figures (2016)",
+   "The Social Network (2010)"
+  ],
+  "expect_ids": [
+   872585,
+   205596,
+   453,
+   266856,
+   381284,
+   37799
+  ]
+ },
+ {
+  "id": "sim-01",
+  "type": "similar",
+  "q": "phim giống Interstellar",
+  "expect": [
+   "Arrival (2016)",
+   "The Martian (2015)",
+   "Gravity (2013)",
+   "Ad Astra (2019)",
+   "Contact (1997)",
+   "Inception (2010)",
+   "2001: A Space Odyssey (1968)"
+  ],
+  "expect_ids": [
+   329865,
+   286217,
+   49047,
+   419704,
+   686,
+   27205,
+   62
+  ],
+  "ref": 157336
+ },
+ {
+  "id": "sim-02",
+  "type": "similar",
+  "q": "phim kiểu Hố đen tử thần",
+  "expect": [
+   "Arrival (2016)",
+   "The Martian (2015)",
+   "Gravity (2013)",
+   "Ad Astra (2019)",
+   "Contact (1997)",
+   "Inception (2010)"
+  ],
+  "expect_ids": [
+   329865,
+   286217,
+   49047,
+   419704,
+   686,
+   27205
+  ],
+  "ref": 157336
+ },
+ {
+  "id": "sim-03",
+  "type": "similar",
+  "q": "phim giống Parasite",
+  "expect": [
+   "Snowpiercer (2013)",
+   "Memories of Murder (2003)",
+   "Burning (2018)",
+   "The Handmaiden (2016)",
+   "Mother (2009)",
+   "Get Out (2017)",
+   "Us (2019)",
+   "The Menu (2022)"
+  ],
+  "expect_ids": [
+   110415,
+   11423,
+   491584,
+   290098,
+   30018,
+   419430,
+   458723,
+   593643
+  ],
+  "ref": 496243
+ },
+ {
+  "id": "sim-04",
+  "type": "similar",
+  "q": "phim giống La La Land",
+  "expect": [
+   "Whiplash (2014)",
+   "Begin Again (2013)",
+   "Once (2007)",
+   "A Star Is Born (2018)",
+   "Past Lives (2023)",
+   "Singin' in the Rain (1952)",
+   "The Greatest Showman (2017)"
+  ],
+  "expect_ids": [
+   244786,
+   198277,
+   5723,
+   332562,
+   666277,
+   872,
+   316029
+  ],
+  "ref": 313369
+ },
+ {
+  "id": "sim-05",
+  "type": "similar",
+  "q": "phim giống John Wick",
+  "expect": [
+   "John Wick: Chapter 2 (2017)",
+   "Nobody (2021)",
+   "The Equalizer (2014)",
+   "Atomic Blonde (2017)",
+   "The Raid (2011)",
+   "Taken (2008)",
+   "Extraction (2020)"
+  ],
+  "expect_ids": [
+   324552,
+   615457,
+   156022,
+   341013,
+   94329,
+   8681,
+   545609
+  ],
+  "ref": 245891
+ },
+ {
+  "id": "sim-06",
+  "type": "similar",
+  "q": "phim giống Spirited Away",
+  "expect": [
+   "Howl's Moving Castle (2004)",
+   "Princess Mononoke (1997)",
+   "My Neighbor Totoro (1988)",
+   "The Boy and the Heron (2023)",
+   "Kiki's Delivery Service (1989)",
+   "Coraline (2009)",
+   "Your Name. (2016)"
+  ],
+  "expect_ids": [
+   4935,
+   128,
+   8392,
+   508883,
+   16859,
+   14836,
+   372058
+  ],
+  "ref": 129
+ },
+ {
+  "id": "sim-07",
+  "type": "similar",
+  "q": "phim giống Get Out",
+  "expect": [
+   "Us (2019)",
+   "Nope (2022)",
+   "The Invitation (2015)",
+   "The Menu (2022)",
+   "Midsommar (2019)",
+   "Ready or Not (2019)",
+   "Barbarian (2022)"
+  ],
+  "expect_ids": [
+   458723,
+   762504,
+   306947,
+   593643,
+   530385,
+   567609,
+   913290
+  ],
+  "ref": 419430
+ },
+ {
+  "id": "sim-08",
+  "type": "similar",
+  "q": "phim giống Before Sunrise, chỉ nói chuyện mà cuốn",
+  "expect": [
+   "Before Sunset (2004)",
+   "Before Midnight (2013)",
+   "Past Lives (2023)",
+   "Lost in Translation (2003)",
+   "Her (2013)",
+   "Once (2007)"
+  ],
+  "expect_ids": [
+   80,
+   132344,
+   666277,
+   153,
+   152601,
+   5723
+  ],
+  "ref": 76
+ },
+ {
+  "id": "flt-01",
+  "type": "filter",
+  "q": "phim Hàn Quốc kinh dị",
+  "expect": [
+   "Train to Busan (2016)",
+   "The Wailing (2016)",
+   "A Tale of Two Sisters (2003)",
+   "#Alive (2020)",
+   "I Saw the Devil (2010)"
+  ],
+  "filters": {
+   "countries": [
+    "KR"
+   ],
+   "genres": [
+    "Horror"
+   ]
+  },
+  "expect_ids": [
+   396535,
+   293670,
+   4552,
+   614696,
+   49797
+  ]
+ },
+ {
+  "id": "flt-02",
+  "type": "filter",
+  "q": "phim hoạt hình dưới 100 phút cho trẻ em",
+  "expect": [
+   "Toy Story (1995)",
+   "Finding Nemo (2003)",
+   "Zootopia (2016)",
+   "Up (2009)",
+   "My Neighbor Totoro (1988)",
+   "Inside Out (2015)"
+  ],
+  "filters": {
+   "genres": [
+    "Animation"
+   ],
+   "runtime_max": 100
+  },
+  "allow_extra": [
+   "certification_max"
+  ],
+  "expect_ids": [
+   862,
+   12,
+   269149,
+   14160,
+   8392,
+   150540
+  ]
+ },
+ {
+  "id": "flt-03",
+  "type": "filter",
+  "q": "phim khoa học viễn tưởng từ 2020 trở lại đây, không kinh dị",
+  "expect": [
+   "Dune (2021)",
+   "Dune: Part Two (2024)",
+   "Everything Everywhere All at Once (2022)",
+   "Tenet (2020)",
+   "The Creator (2023)",
+   "Furiosa: A Mad Max Saga (2024)"
+  ],
+  "filters": {
+   "genres": [
+    "Science Fiction"
+   ],
+   "year_min": 2020,
+   "exclude_genres": [
+    "Horror"
+   ]
+  },
+  "expect_ids": [
+   438631,
+   693134,
+   545611,
+   577922,
+   670292,
+   786892
+  ]
+ },
+ {
+  "id": "flt-04",
+  "type": "filter",
+  "q": "phim của Christopher Nolan",
+  "expect": [
+   "Inception (2010)",
+   "Interstellar (2014)",
+   "The Dark Knight (2008)",
+   "Oppenheimer (2023)",
+   "Memento (2000)",
+   "The Prestige (2006)",
+   "Dunkirk (2017)",
+   "Tenet (2020)"
+  ],
+  "filters": {
+   "person": "Christopher Nolan"
+  },
+  "expect_ids": [
+   27205,
+   157336,
+   155,
+   872585,
+   77,
+   1124,
+   374720,
+   577922
+  ]
+ },
+ {
+  "id": "flt-05",
+  "type": "filter",
+  "q": "phim Việt Nam hay",
+  "expect": [
+   "Furie (2019)",
+   "The Third Wife (2019)",
+   "Mai (2024)",
+   "The Scent of Green Papaya (1993)"
+  ],
+  "filters": {
+   "countries": [
+    "VN"
+   ]
+  },
+  "expect_ids": [
+   567973,
+   544812,
+   1210973,
+   19552
+  ]
+ },
+ {
+  "id": "flt-06",
+  "type": "filter",
+  "q": "phim tình cảm trước năm 2000",
+  "expect": [
+   "Titanic (1997)",
+   "Before Sunrise (1995)",
+   "Pretty Woman (1990)",
+   "Notting Hill (1999)",
+   "When Harry Met Sally... (1989)",
+   "Roman Holiday (1953)",
+   "Casablanca (1942)"
+  ],
+  "filters": {
+   "genres": [
+    "Romance"
+   ],
+   "year_max": 1999
+  },
+  "expect_ids": [
+   597,
+   76,
+   114,
+   509,
+   639,
+   804,
+   289
+  ]
+ },
+ {
+  "id": "flt-07",
+  "type": "filter",
+  "q": "phim hành động ngắn dưới 2 tiếng, không phải siêu anh hùng",
+  "expect": [
+   "John Wick (2014)",
+   "The Raid (2011)",
+   "Baby Driver (2017)",
+   "Nobody (2021)",
+   "Taken (2008)",
+   "Mad Max: Fury Road (2015)"
+  ],
+  "filters": {
+   "genres": [
+    "Action"
+   ],
+   "runtime_max": 120
+  },
+  "expect_ids": [
+   245891,
+   94329,
+   339403,
+   615457,
+   8681,
+   76341
+  ]
+ },
+ {
+  "id": "flt-08",
+  "type": "filter",
+  "q": "phim Nhật không phải hoạt hình",
+  "expect": [
+   "Seven Samurai (1954)",
+   "Shoplifters (2018)",
+   "Drive My Car (2021)",
+   "Perfect Days (2023)",
+   "Godzilla Minus One (2023)",
+   "Battle Royale (2000)",
+   "Rashomon (1950)"
+  ],
+  "filters": {
+   "countries": [
+    "JP"
+   ],
+   "exclude_genres": [
+    "Animation"
+   ]
+  },
+  "expect_ids": [
+   346,
+   505192,
+   758866,
+   976893,
+   940721,
+   3176,
+   548
+  ]
+ },
+ {
+  "id": "vi-01",
+  "type": "vi_title",
+  "q": "phim giống Kẻ trộm giấc mơ",
+  "expect": [
+   "Shutter Island (2010)",
+   "The Prestige (2006)",
+   "Tenet (2020)",
+   "Memento (2000)",
+   "Interstellar (2014)",
+   "The Matrix (1999)"
+  ],
+  "expect_ids": [
+   11324,
+   1124,
+   577922,
+   77,
+   157336,
+   603
+  ],
+  "ref": 27205
+ },
+ {
+  "id": "vi-02",
+  "type": "vi_title",
+  "q": "phim giống Ký sinh trùng",
+  "expect": [
+   "Snowpiercer (2013)",
+   "Memories of Murder (2003)",
+   "Burning (2018)",
+   "The Handmaiden (2016)",
+   "Mother (2009)",
+   "Us (2019)"
+  ],
+  "expect_ids": [
+   110415,
+   11423,
+   491584,
+   290098,
+   30018,
+   458723
+  ],
+  "ref": 496243
+ },
+ {
+  "id": "vi-03",
+  "type": "vi_title",
+  "q": "phim giống Chuyến tàu sinh tử",
+  "expect": [
+   "#Alive (2020)",
+   "World War Z (2013)",
+   "28 Days Later (2002)",
+   "Peninsula (2020)",
+   "Snowpiercer (2013)",
+   "Dawn of the Dead (2004)"
+  ],
+  "expect_ids": [
+   614696,
+   72190,
+   170,
+   581392,
+   110415,
+   924
+  ],
+  "ref": 396535
+ },
+ {
+  "id": "vi-04",
+  "type": "vi_title",
+  "q": "phim giống Vùng đất câm lặng",
+  "expect": [
+   "A Quiet Place Part II (2021)",
+   "Bird Box (2018)",
+   "10 Cloverfield Lane (2016)",
+   "Don't Breathe (2016)",
+   "Signs (2002)",
+   "The Mist (2007)"
+  ],
+  "expect_ids": [
+   520763,
+   405774,
+   333371,
+   300669,
+   2675,
+   5876
+  ],
+  "ref": 447332
+ }
+]
