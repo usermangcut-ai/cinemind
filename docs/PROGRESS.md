@@ -14,6 +14,7 @@
 - [x] 7. Jev qua provider, series TV, sửa hallucination, frontend thật + stream → `steps/07-series-jev-frontend.md`
 - [x] 8. Bỏ MMR, Jev chấm 40, bộ 100 câu kiểu người dùng thật + giám khảo LLM → `steps/08-eval100.md`
 - [x] 9. Jev loại phim sai yêu cầu cứng (thời đại, bối cảnh, kiểu nhân vật) + Jev xem overview + ⑦ hết bịa lý do → `steps/09-jev-loai-phim.md`
+- [x] 10. Thử sửa "giống X nhưng…" — không cải thiện rõ, chỉ giữ chỉnh câu Jev; **chốt bản AI** → `steps/10-giong-x-nhung.md`
 
 ## Trạng thái hiện tại
 | | |

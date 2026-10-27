@@ -67,7 +67,7 @@ def _jev_one(client, url, query, ref, m):
         "noi_dung": {"type": "score", "instructions": "Cốt truyện/ý tưởng của phim khớp yêu cầu của user tới đâu?", "criteria": JEV_LEVELS},
         "chu_de": {"type": "score", "instructions": "Chủ đề, tâm trạng, không khí của phim khớp yêu cầu tới đâu?", "criteria": JEV_LEVELS},
         "vi_pham": {"type": "noul", "instructions": "User có nói rõ KHÔNG muốn điều gì (vd không kinh dị, không buồn) mà phim này lại có không? Nếu user không nói điều gì không muốn → false."},
-        "sai_yeu_cau": {"type": "noul", "instructions": "User có nêu rõ điều kiện BẮT BUỘC về phim (thời đại, bối cảnh, nơi chốn, kiểu nhân vật chính, nghề nghiệp, đối tượng câu chuyện…) mà phim này KHÔNG đáp ứng không? Chỉ true khi thông tin phim cho thấy rõ là trái điều kiện. User chỉ nêu cảm giác, chủ đề chung, hoặc chỉ muốn giống một phim khác → false."}}}
+        "sai_yeu_cau": {"type": "noul", "instructions": "User có nêu rõ điều kiện BẮT BUỘC về phim (thời đại, bối cảnh, nơi chốn, kiểu nhân vật chính, nghề nghiệp, đối tượng câu chuyện…) mà phim này KHÔNG đáp ứng không? Chỉ true khi thông tin phim cho thấy rõ là trái điều kiện. Nếu user muốn phim KHÁC phim tham chiếu ở điểm nào (vd nhẹ hơn, ngắn hơn, ít…) thì điểm đó cũng là điều kiện bắt buộc. User chỉ nêu cảm giác, chủ đề chung, hoặc chỉ muốn giống một phim mà không nêu điểm khác → false."}}}
     for attempt in range(3):
         try:
             r = client.post(url, json=body)
