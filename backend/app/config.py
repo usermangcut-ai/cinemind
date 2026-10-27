@@ -9,6 +9,7 @@ load_dotenv(ROOT / ".env")
 DATABASE_URL = os.environ["DATABASE_URL"]
 LLM_BASE_URL = os.environ["LLM_BASE_URL"]
 LLM_API_KEY = os.environ["LLM_API_KEY"]
+AUX_API_KEY = os.getenv("AUX_API_KEY") or LLM_API_KEY  # embedding + Jev (có thể khác nhóm kênh với key LLM)
 LLM_MODEL_ONLINE = os.getenv("LLM_MODEL_ONLINE", "gpt-4.1-mini")
 LLM_MODEL_OFFLINE = os.getenv("LLM_MODEL_OFFLINE", "gpt-4.1-mini")
 LLM_MODEL_PARSE = os.getenv("LLM_MODEL_PARSE", "gpt-4.1-mini")  # ①: ổn định hơn gpt-5.4-mini khi trích filter

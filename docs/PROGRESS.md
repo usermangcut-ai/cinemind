@@ -17,7 +17,7 @@
 ## Trạng thái hiện tại
 | | |
 |---|---|
-| Được gợi ý (có hồ sơ + vector) | **7.494 phim lẻ + 3.531 series = 11.025** |
+| Được gợi ý (có hồ sơ + vector) | **7.494 phim lẻ + 5.037 series = 12.531** (series châu Á: CN 921 · KR 591 · HK 95 · TH 75 · TW 42) |
 | Nhận diện được tên | 15.151 phim lẻ + 16.559 series (gồm ~5k series châu Á kéo thêm 27/10) |
 | Flow | ① gpt-4.1-mini → ② tên phim/series → ③ filter (chống bịa 4 lớp + từ khoá thể loại/loại phim) → ④ RRF → ⑤ top 40 RRF → ⑥ Jev (40) → gộp series → ⑦ gpt-4.1-mini |
 | Không tìm thấy phim | nói thật / hỏi lại |
@@ -29,7 +29,7 @@
 ## Việc còn lại (chi tiết + cách làm: [`ROADMAP.md`](ROADMAP.md))
 | # | Việc | Cần user? |
 |---|---|---|
-| −1 | **Chờ user:** viết hồ sơ ~800 series châu Á (CN/KR/TH…) ~1,4 USD · đăng nhập/phân quyền thật có cần không | **Có** |
+| −1 | **Chờ user:** đăng nhập/phân quyền thật có cần không | **Có** |
 | 0 | "giống X **nhưng** <khác>" và pha trộn nhiều phim: áp phần "nhưng" mạnh hơn (ngắn hơn, ít bạo lực…) | Không |
 | 1 | Cache câu trả lời (câu trùng → 0 s, 0 đồng) | Không |
 | 1b | **Xuất DB cho khách** (`pg_dump` ~200–300 MB nén → GitHub Release / Drive + lệnh `pg_restore`) — không có thì khách phải tự viết lại 11k hồ sơ (~20 USD, vài tiếng) | Không |
@@ -37,7 +37,7 @@
 | 3 | ~~Push git~~ ✅ https://github.com/usermangcut-ai/cinemind (private) | — |
 | 4 | Đổi key sang nhóm "OpenAI Medium" (provider khuyên, đỡ lỗi 503) | **Có** |
 | 5 | Job tự cập nhật phim mới / trending | Không |
-| 6 | Hồ sơ cho phần còn lại (~7.700 phim lẻ, ~9.300 series) | Ngân sách (~0,17 cent/phim) |
+| 6 | Hồ sơ cho phần còn lại (~7.700 phim lẻ, ~11.500 series) | Ngân sách (~0,17 cent/phim) |
 
 ## Lệnh hay dùng
 ```bash

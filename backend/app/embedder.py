@@ -29,7 +29,7 @@ def _normalize(m):
 
 def _api(texts, model, batch=64):
     out = []
-    headers = {"Authorization": f"Bearer {config.LLM_API_KEY}"}
+    headers = {"Authorization": f"Bearer {config.AUX_API_KEY}"}
     with httpx.Client(base_url=config.LLM_BASE_URL, headers=headers, timeout=120) as c:
         for i in range(0, len(texts), batch):
             chunk = texts[i:i + batch]

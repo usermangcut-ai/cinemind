@@ -81,7 +81,7 @@ def jev_rerank(query, ref, movies):
     if config.TYPESAFE_API_KEY:
         url, key = "https://api.typesafe.ai/v1/systemone", config.TYPESAFE_API_KEY
     else:
-        url, key = config.LLM_BASE_URL.rstrip("/") + "/systemone", config.LLM_API_KEY
+        url, key = config.LLM_BASE_URL.rstrip("/") + "/systemone", config.AUX_API_KEY
     with httpx.Client(headers={"Authorization": f"Bearer {key}"}, timeout=15) as client,             ThreadPoolExecutor(config.JEV_CONCURRENCY) as pool:
         res = list(pool.map(lambda m: _jev_one(client, url, query, ref, m), movies))
     ok = {mid: {"parts": parts, "score": final_score(parts, vp)} for mid, parts, vp in res if parts}
@@ -95,7 +95,7 @@ def qwen_rerank(query, ref, movies):
     q = query + (f" (giống phim {ref['title']}: {(ref.get('profile') or ref.get('overview') or '')[:300]})" if ref else "")
     docs = [_card(m, 8) + " · " + (m.get("overview") or "")[:300] for m in movies]
     with httpx.Client(timeout=30) as c:
-        r = c.post(config.LLM_BASE_URL.rstrip("/") + "/rerank", headers={"Authorization": f"Bearer {config.LLM_API_KEY}"},
+        r = c.post(config.LLM_BASE_URL.rstrip("/") + "/rerank", headers={"Authorization": f"Bearer {config.AUX_API_KEY}"},
                    json={"model": "qwen3-rerank", "query": q, "documents": docs, "top_n": len(docs)})
         r.raise_for_status()
     out = {}

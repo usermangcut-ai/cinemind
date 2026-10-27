@@ -8,8 +8,8 @@
 |---|---|---|---|
 | 0.1 👤 | Repo public hay private trong lúc khách chưa bảo vệ đồ án | User + khách | Hiện **public**. Rủi ro: khách bị phát hiện trùng lặp / không muốn công khai |
 | 0.2 👤 | Đề tài có bắt buộc **đăng nhập thật + phân quyền** không, cần vai trò nào | Khách | Xem mục 2.1 |
-| 0.3 👤💰 | Viết hồ sơ ~800 series châu Á (500 CN · 200 KR · 100 TH/TW/HK) | User | ~1,4 USD. Hiện CN chỉ 15/2.004 bộ có hồ sơ → hầu như không được gợi ý |
-| 0.4 👤 | Đổi key provider sang nhóm "OpenAI Medium" | User | Provider khuyên vì nhóm hiện tại khan kênh → lỗi 503 |
+| 0.3 ✅ | Hồ sơ 1.300 series châu Á (27/10: ~2,5 USD key Medium + ~0,6 USD embed) | — | Có hồ sơ: CN 921 · KR 591 · HK 95 · TH 75 · TW 42 |
+| 0.4 ✅ | Đã đổi key: `LLM_API_KEY` = nhóm Medium (gpt) · `AUX_API_KEY` = key cũ (embedding + Jev) | — | Medium nhanh (~150 hồ sơ/phút, gần như không lỗi) nhưng ~0,19 cent/hồ sơ (×2,4 nhóm Cheap) |
 
 ## 1. Giao được cho khách (🔴)
 | # | Việc | Ước lượng | Cách làm |
