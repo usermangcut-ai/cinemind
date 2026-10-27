@@ -19,7 +19,9 @@ load_dotenv(ROOT / ".env")
 USAGE = ROOT / "data/profile_usage.jsonl"
 CONCURRENCY = 10
 # provider hay trả 429 theo đợt → mỗi lần thử lại xoay sang model dự phòng
-FALLBACK_MODELS = ["gpt-5.4-mini"]  # gemini-3.5-flash bị bỏ: provider cộng token ẩn, user không dùng
+# Offline không cần nhanh → KHÔNG xoay sang model đắt. Log provider 27/10: gpt-5.4-mini ~2,6×, gemini-3.5-flash ~23× gpt-4.1-mini.
+# gpt-4.1-mini lỗi (nhóm "Cheap API" khan kênh) thì chờ rồi thử lại chính nó.
+FALLBACK_MODELS = []
 REFUSED = [0]  # số lần liên tiếp bị provider từ chối
 
 SYSTEM = """Bạn là biên tập viên phim, viết "hồ sơ cảm nhận" cho hệ thống gợi ý phim tiếng Việt.
