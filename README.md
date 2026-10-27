@@ -2,7 +2,7 @@
 
 # 🎬 CineMind
 
-**Trợ lý tìm phim bằng tiếng Việt — hỏi như nói chuyện, nhận gợi ý kèm lý do.**
+**Trợ lý tìm phim bằng tiếng Việt**
 
 *"phim giống Hố đen tử thần, từ 2015, không kinh dị"* · *"phim bộ Hàn tâm lý hồi hộp"* · *"phim làm mình khóc hết nước mắt"*
 
