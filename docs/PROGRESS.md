@@ -13,15 +13,16 @@
 - [x] 6. FastAPI + nối frontend → `steps/06-api-frontend.md`
 - [x] 7. Jev qua provider, series TV, sửa hallucination, frontend thật + stream → `steps/07-series-jev-frontend.md`
 - [x] 8. Bỏ MMR, Jev chấm 40, bộ 100 câu kiểu người dùng thật + giám khảo LLM → `steps/08-eval100.md`
+- [x] 9. Jev loại phim sai yêu cầu cứng (thời đại, bối cảnh, kiểu nhân vật) + Jev xem overview + ⑦ hết bịa lý do → `steps/09-jev-loai-phim.md`
 
 ## Trạng thái hiện tại
 | | |
 |---|---|
 | Được gợi ý (có hồ sơ + vector) | **7.494 phim lẻ + 5.037 series = 12.531** (series châu Á: CN 921 · KR 591 · HK 95 · TH 75 · TW 42) |
 | Nhận diện được tên | 15.151 phim lẻ + 16.559 series (gồm ~5k series châu Á kéo thêm 27/10) |
-| Flow | ① gpt-4.1-mini → ② tên phim/series → ③ filter (chống bịa 4 lớp + từ khoá thể loại/loại phim) → ④ RRF → ⑤ top 40 RRF → ⑥ Jev (40) → gộp series → ⑦ gpt-4.1-mini |
+| Flow | ① gpt-4.1-mini → ② tên phim/series → ③ filter (chống bịa 4 lớp + từ khoá thể loại/loại phim) → ④ RRF → ⑤ top 40 RRF → ⑥ Jev (40, loại phim `sai_yeu_cau`) → gộp series → ⑦ gpt-4.1-mini |
 | Không tìm thấy phim | nói thật / hỏi lại |
-| Chất lượng (100 câu, giám khảo LLM) | **95% phim hợp · 65% rất hợp · 100% câu có phim rất hợp trong top 3** · yếu nhất: pha trộn nhiều phim, "giống X nhưng…" |
+| Chất lượng (100 câu, giám khảo LLM) | **98% phim hợp · 78% rất hợp · 100% câu có phim rất hợp trong top 3** (steps/09; trước: 95% · 65%) · yếu nhất: pha trộn nhiều phim, "giống X nhưng…" |
 | Tốc độ | thẻ phim hiện ~6 s, xong ~11 s (stream); provider đôi lúc treo tới 30–90 s |
 | Giá | ~2 cent / câu hỏi (Jev chấm 40 phim) |
 | Ngân sách provider | ~55,7 / 60 USD |

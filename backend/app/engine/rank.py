@@ -44,8 +44,10 @@ def _parts(nd, cd, ref, m):
     return parts
 
 
-def _card(m, profile_lines=4):
+def _card(m, profile_lines=4, overview=0):
     prof = "; ".join((m.get("profile") or "").split("\n")[:profile_lines])
+    if overview and m.get("overview"):  # thời đại, bối cảnh, kiểu nhân vật thường chỉ nằm trong tóm tắt
+        prof += " · Tóm tắt: " + m["overview"][:overview]
     vi = f" / {m['title_vi']}" if m.get("title_vi") else ""
     kind = "Series · " if m.get("kind") == "tv" else ""
     return (f"[{m['id']}] {kind}{m['title']}{vi} ({m['year']}) · {', '.join(m['genres'])} · {m['runtime'] or '?'}' · "
@@ -54,16 +56,18 @@ def _card(m, profile_lines=4):
 
 # ---------- Jev ----------
 JEV_LEVELS = ["Không liên quan", "Hơi liên quan", "Khá khớp", "Rất khớp"]
+DROP_AT = 0.6  # cùng ngưỡng "chắc chắn" với vi_pham
 
 
 def _jev_one(client, url, query, ref, m):
-    state = {"yeu_cau": query, "phim": _card(m, 8)}
+    state = {"yeu_cau": query, "phim": _card(m, 8, overview=400)}
     if ref:
         state["phim_tham_chieu"] = _card(ref, 8)
     body = {"model": "jev-latest", "state": state, "questions": {
         "noi_dung": {"type": "score", "instructions": "Cốt truyện/ý tưởng của phim khớp yêu cầu của user tới đâu?", "criteria": JEV_LEVELS},
         "chu_de": {"type": "score", "instructions": "Chủ đề, tâm trạng, không khí của phim khớp yêu cầu tới đâu?", "criteria": JEV_LEVELS},
-        "vi_pham": {"type": "noul", "instructions": "User có nói rõ KHÔNG muốn điều gì (vd không kinh dị, không buồn) mà phim này lại có không? Nếu user không nói điều gì không muốn → false."}}}
+        "vi_pham": {"type": "noul", "instructions": "User có nói rõ KHÔNG muốn điều gì (vd không kinh dị, không buồn) mà phim này lại có không? Nếu user không nói điều gì không muốn → false."},
+        "sai_yeu_cau": {"type": "noul", "instructions": "User có nêu rõ điều kiện BẮT BUỘC về phim (thời đại, bối cảnh, nơi chốn, kiểu nhân vật chính, nghề nghiệp, đối tượng câu chuyện…) mà phim này KHÔNG đáp ứng không? Chỉ true khi thông tin phim cho thấy rõ là trái điều kiện. User chỉ nêu cảm giác, chủ đề chung, hoặc chỉ muốn giống một phim khác → false."}}}
     for attempt in range(3):
         try:
             r = client.post(url, json=body)
@@ -71,10 +75,10 @@ def _jev_one(client, url, query, ref, m):
             a = r.json()["answers"]
             top = len(JEV_LEVELS) - 1
             parts = _parts(a["noi_dung"]["score"] / top, a["chu_de"]["score"] / top, ref, m)
-            return m["id"], parts, a["vi_pham"]["noul"]
+            return m["id"], parts, a["vi_pham"]["noul"], a["sai_yeu_cau"]["noul"]
         except (httpx.HTTPError, KeyError):
             time.sleep(0.5 * (attempt + 1))
-    return m["id"], None, None
+    return m["id"], None, None, None
 
 
 def jev_rerank(query, ref, movies):
@@ -84,7 +88,8 @@ def jev_rerank(query, ref, movies):
         url, key = config.LLM_BASE_URL.rstrip("/") + "/systemone", config.AUX_API_KEY
     with httpx.Client(headers={"Authorization": f"Bearer {key}"}, timeout=15) as client,             ThreadPoolExecutor(config.JEV_CONCURRENCY) as pool:
         res = list(pool.map(lambda m: _jev_one(client, url, query, ref, m), movies))
-    ok = {mid: {"parts": parts, "score": final_score(parts, vp)} for mid, parts, vp in res if parts}
+    ok = {mid: {"parts": parts, "score": final_score(parts, vp), "drop": (off or 0) >= DROP_AT}
+          for mid, parts, vp, off in res if parts}
     if len(ok) < len(movies) * 0.7:
         raise httpx.HTTPError(f"Jev lỗi quá nhiều ({len(movies) - len(ok)}/{len(movies)})")
     return ok
@@ -122,6 +127,8 @@ Sắp picks theo độ hợp giảm dần."""
 
 EXPLAIN_SYSTEM = """Bạn là chuyên gia tư vấn phim, trả lời tiếng Việt, giọng thân thiện ngắn gọn.
 Các phim dưới đây ĐÃ được chọn và chấm điểm. Viết lời giới thiệu và lý do cho từng phim, giữ nguyên thứ tự.
+Lý do CHỈ nêu điều có thật trong thông tin phim; không gán điều kiện của user cho phim khi thông tin phim không thể hiện điều đó.
+Phim chỉ khớp một phần thì nói rõ phần khớp. Danh sách có thể ít hơn 10 phim; nếu Ghi chú nói kho ít phim đúng yêu cầu thì câu mở đầu nói thật điều đó.
 Trả JSON: {"text": "1-2 câu mở đầu", "reasons": {"<id dạng số, vd 4977>": "≤ 20 từ vì sao hợp"} — ĐỦ lý do cho MỌI phim,
  "chips": ["2-3 câu user có thể BẤM để hỏi tiếp, viết như lời user, ≤ 8 từ"]}"""
 
@@ -207,7 +214,15 @@ def rank(query, ref, movies, notes, preview=None):
             scores = f(query, ref, movies[:config.JEV_TOP])  # movies đã xếp theo RRF/MMR
             by = {m["id"]: m for m in movies}
             coll = {m["id"]: m.get("collection_id") for m in movies}
-            top = top_unique(sorted(scores.items(), key=lambda kv: -kv[1]["score"]), coll)
+            ranked = sorted(scores.items(), key=lambda kv: -kv[1]["score"])
+            kept = [kv for kv in ranked if not kv[1].get("drop") and kv[1]["score"] >= config.MIN_SCORE]
+            dropped = [mid for mid, s in ranked if s.get("drop") or s["score"] < config.MIN_SCORE]
+            if len(kept) < config.MIN_KEEP:  # kho quá ít phim đúng → vẫn đưa vài phim gần nhất, nói thật
+                kept = ranked[:config.MIN_KEEP]
+                notes = list(notes or []) + ["Kho có rất ít phim đáp ứng hết điều kiện của user; đây là các phim gần nhất, hãy nói thật điều đó."]
+            elif len(kept) < 10:
+                notes = list(notes or []) + [f"Chỉ có {len(kept)} phim đúng yêu cầu (các phim khác đã bị loại vì không khớp)."]
+            top = top_unique(kept, coll)
             if preview:  # đã có thứ tự + điểm → cho UI hiện thẻ phim trước khi LLM viết xong lý do
                 preview([{"id": mid, "reason": "", "sim": s} for mid, s in top])
             t = time.time()
@@ -216,7 +231,7 @@ def rank(query, ref, movies, notes, preview=None):
             except llm.LLMError:  # provider lỗi ở bước viết → vẫn giữ thứ tự + điểm của Jev
                 text, chips, usage = "Đây là những phim hợp nhất với yêu cầu của bạn:", [], {}
                 picks = [{"id": mid, "reason": _fallback_reason(by[mid]), "sim": s} for mid, s in top]
-            return text, picks, chips, {"engine": config.RERANK, "explain_s": round(time.time() - t, 2),
+            return text, picks, chips, {"engine": config.RERANK, "explain_s": round(time.time() - t, 2), "dropped": dropped,
                                         "explain_model": usage.get("_model"), "explain_attempt": usage.get("_attempt")}
         except (httpx.HTTPError, KeyError):
             pass  # Jev lỗi → rơi xuống dự phòng

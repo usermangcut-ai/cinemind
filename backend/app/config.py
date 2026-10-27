@@ -18,4 +18,6 @@ TYPESAFE_API_KEY = os.getenv("TYPESAFE_API_KEY", "")  # trống → gọi Jev qu
 RERANK = os.getenv("RERANK", "jev")                     # jev | qwen | llm
 JEV_CONCURRENCY = int(os.getenv("JEV_CONCURRENCY", "20"))
 JEV_TOP = int(os.getenv("JEV_TOP", "40"))                 # số phim đưa vào bước ⑥ chấm (Jev hoặc qwen)
+MIN_KEEP = int(os.getenv("MIN_KEEP", "3"))                # sau khi Jev loại phim sai yêu cầu, giữ ít nhất bấy nhiêu phim
+MIN_SCORE = int(os.getenv("MIN_SCORE", "0"))              # điểm sàn (%) — dưới mức này thì bỏ; 0 = tắt
 POOL_N = int(os.getenv("POOL_N", "40"))                   # ⑤ giữ bao nhiêu phim sau MMR                 # số phim đưa vào Jev chấm (giá ~0,03 cent/phim)

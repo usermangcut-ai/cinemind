@@ -31,7 +31,7 @@
 ## 3. Chất lượng engine
 | # | Việc | Ước lượng | Ghi chú |
 |---|---|---|---|
-| 3.0 🔴 | **Jev loại phim sai yêu cầu cứng + không ép đủ 10** (ca: "phim thời Dân Quốc từ 2023" ra 6/10 phim cổ trang, lý do bịa) | 2 giờ | Kế hoạch chi tiết: `docs/plans/09-jev-loai-phim.md` (chỉ ở máy, gitignore) |
+| 3.0 ✅ | **Jev loại phim sai yêu cầu cứng + không ép đủ 10** (ca: "phim thời Dân Quốc từ 2023" ra 6/10 phim cổ trang, lý do bịa) | 2 giờ | Kế hoạch chi tiết: `docs/plans/09-jev-loai-phim.md` (chỉ ở máy, gitignore) |
 | 3.1 🔴 | **"giống X nhưng …"** và pha trộn nhiều phim (yếu nhất: 36% rất hợp) | 1–2 giờ | Ý tưởng: phần "nhưng" (ngắn hơn, ít bạo lực, nhẹ hơn) đưa vào Jev như 1 câu hỏi `noul` riêng + phạt mạnh; "ngắn hơn X" → filter `runtime_max = runtime(X)`; pha trộn → dùng trung bình vector các phim tham chiếu |
 | 3.2 🟠 | Cập nhật bộ đánh giá 40 câu: thêm series vào đáp án | 30 phút | Hiện kho có series nên nDCG theo bộ cũ bị thấp giả |
 | 3.3 🟠💰 | Viết hồ sơ phần còn lại (~7.700 phim lẻ · ~13.000 series) | — | ~0,17 cent/phim; ưu tiên phim từ 1975 + series đang hot (popularity) |

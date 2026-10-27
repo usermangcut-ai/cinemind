@@ -3,7 +3,8 @@
 Bước 1 (run):   chạy engine cho từng câu → data/eval100/results.jsonl (chạy lại được, bỏ qua câu đã có)
 Bước 2 (judge): giám khảo chấm từng phim trong top 10: 2 = rất hợp · 1 = tạm hợp · 0 = không hợp → judged.jsonl
 Bước 3 (report): bảng tổng hợp theo nhóm → data/eval100/report.md
-Chạy:  .venv/Scripts/python -m eval.eval100 run | judge | report
+Chạy:  .venv/Scripts/python -m eval.eval100 run | judge | report  [thư_mục_kết_quả] [file_câu_hỏi]
+       vd: ... run ctx_base questions_ctx.json  → data/eval100/ctx_base/
 """
 import json, statistics as st, sys, time
 from concurrent.futures import ThreadPoolExecutor
@@ -18,8 +19,9 @@ from app import config, llm
 from app.engine.pipeline import ask
 
 HERE = Path(__file__).parent
-OUT = config.ROOT / "data/eval100"
+OUT = config.ROOT / "data/eval100" / (sys.argv[2] if len(sys.argv) > 2 else "")
 OUT.mkdir(parents=True, exist_ok=True)
+QFILE = HERE / (sys.argv[3] if len(sys.argv) > 3 else "questions100.json")
 RES, JUD = OUT / "results.jsonl", OUT / "judged.jsonl"
 JUDGE_MODEL = "claude-haiku-4-5-20251001"
 
@@ -55,7 +57,7 @@ def _run_one(q):
 
 
 def run():
-    qs = json.loads((HERE / "questions100.json").read_text(encoding="utf-8"))
+    qs = json.loads(QFILE.read_text(encoding="utf-8"))
     done = load(RES)
     todo = [q for q in qs if q["id"] not in done]
     print(f"cần chạy: {len(todo)}/{len(qs)}", flush=True)
@@ -112,7 +114,7 @@ def ndcg(g):
 
 def report():
     js = list(load(JUD).values())
-    qs = json.loads((HERE / "questions100.json").read_text(encoding="utf-8"))
+    qs = json.loads(QFILE.read_text(encoding="utf-8"))
     order = list(dict.fromkeys(q["group"] for q in qs))
     def stats(rs):
         rs_ok = [r for r in rs if r["grades"]]
@@ -120,20 +122,22 @@ def report():
         good = [sum(x == 2 for x in r["grades"]) / len(r["grades"]) for r in rs_ok]
         top3 = [max(r["grades"][:3]) == 2 for r in rs_ok]
         return (len(rs), st.mean(p) if p else 0, st.mean(good) if good else 0, st.mean(top3) if top3 else 0,
-                st.mean([ndcg(r["grades"]) for r in rs_ok]) if rs_ok else 0, st.median([r["secs"] for r in rs]))
-    lines = ["| Nhóm | n | Hợp (≥1) / 10 | Rất hợp (=2) / 10 | Top 3 có phim rất hợp | Thứ tự (nDCG) | p50 (s) |", "|---|---|---|---|---|---|---|"]
+                st.mean([ndcg(r["grades"]) for r in rs_ok]) if rs_ok else 0, st.median([r["secs"] for r in rs]),
+                st.mean([len(r["grades"]) for r in rs]), sum(len(r["grades"]) < 5 for r in rs))
+    # tỉ lệ tính trên số phim THỰC trả (từ plan 09 có thể < 10)
+    lines = ["| Nhóm | n | Hợp (≥1) | Rất hợp (=2) | Top 3 có phim rất hợp | Thứ tự (nDCG) | p50 (s) | Số phim TB | Câu < 5 phim |", "|---|---|---|---|---|---|---|---|---|"]
     for g in order + ["**Tổng**"]:
         rs = js if g == "**Tổng**" else [r for r in js if r["group"] == g]
         if not rs:
             continue
-        n, p, good, t3, nd, med = stats(rs)
-        lines.append(f"| {g} | {n} | {p:.0%} | {good:.0%} | {t3:.0%} | {nd:.2f} | {med:.1f} |")
+        n, p, good, t3, nd, med, cnt, few = stats(rs)
+        lines.append(f"| {g} | {n} | {p:.0%} | {good:.0%} | {t3:.0%} | {nd:.2f} | {med:.1f} | {cnt:.1f} | {few} |")
     secs = sorted(r["secs"] for r in js)
     lines.append(f"\nĐộ trễ: p50 {secs[len(secs) // 2]:.1f} s · p90 {secs[int(len(secs) * .9)]:.1f} s · max {secs[-1]:.1f} s · "
                  f"không có kết quả / hỏi lại: {sum(not r['grades'] for r in js)}")
     lines.append("\n## 10 câu kém nhất\n| id | câu hỏi | hợp | nhận xét của giám khảo |\n|---|---|---|---|")
-    for r in sorted([r for r in js if r["grades"]], key=lambda r: sum(r["grades"]))[:10]:
-        lines.append(f"| {r['id']} | {r['q']} | {sum(x >= 1 for x in r['grades'])}/10 | {r['note']} |")
+    for r in sorted([r for r in js if r["grades"]], key=lambda r: sum(r["grades"]) / len(r["grades"]))[:10]:
+        lines.append(f"| {r['id']} | {r['q']} | {sum(x >= 1 for x in r['grades'])}/{len(r['grades'])} | {r['note']} |")
     (OUT / "report.md").write_text("\n".join(lines), encoding="utf-8")
     print("\n".join(lines))
 

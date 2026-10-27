@@ -1,0 +1,18 @@
+[
+ {"id": "c01", "group": "bối cảnh/thời đại", "q": "T muốn tìm phim với nam nhân vật ở thời kỳ dân quốc trung quốc từ 2023 trở đi"},
+ {"id": "c02", "group": "kiểu nhân vật", "q": "tìm phim trung quốc kiểu kể về 1 thiếu gia đi"},
+ {"id": "c03", "group": "bối cảnh/thời đại", "q": "phim về Thế chiến 2 ra từ 2015 trở lại đây"},
+ {"id": "c04", "group": "bối cảnh/thời đại", "q": "series Hàn lấy bối cảnh thời Joseon"},
+ {"id": "c05", "group": "bối cảnh/thời đại", "q": "phim Mỹ lấy bối cảnh thập niên 80 về tuổi teen"},
+ {"id": "c06", "group": "kiểu nhân vật", "q": "phim có nữ chính là bác sĩ"},
+ {"id": "c07", "group": "bối cảnh/thời đại", "q": "phim nhật lấy bối cảnh thời edo, có samurai"},
+ {"id": "c08", "group": "bối cảnh/thời đại", "q": "phim lấy bối cảnh ngoài vũ trụ nhưng không phải siêu anh hùng"},
+ {"id": "c09", "group": "kiểu nhân vật", "q": "phim về nhà báo điều tra phanh phui sự thật"},
+ {"id": "c10", "group": "kiểu nhân vật", "q": "series thái về tình yêu học đường"},
+ {"id": "c11", "group": "kiểu nhân vật", "q": "phim có nhân vật chính là đầu bếp"},
+ {"id": "c12", "group": "bối cảnh/thời đại", "q": "phim lấy bối cảnh trong nhà tù"},
+ {"id": "c13", "group": "kiểu nhân vật", "q": "phim mà nhân vật chính là trí tuệ nhân tạo"},
+ {"id": "c14", "group": "đối chứng (câu rộng)", "q": "gợi ý phim nhẹ nhàng xem cuối tuần"},
+ {"id": "c15", "group": "đối chứng (câu rộng)", "q": "phim giống Interstellar"},
+ {"id": "c16", "group": "đối chứng (câu rộng)", "q": "phim buồn về tình mẹ con, không kinh dị"}
+]
