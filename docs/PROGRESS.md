@@ -32,8 +32,9 @@
 | −1 | **Chờ user:** viết hồ sơ ~800 series châu Á (CN/KR/TH…) ~1,4 USD · đăng nhập/phân quyền thật có cần không | **Có** |
 | 0 | "giống X **nhưng** <khác>" và pha trộn nhiều phim: áp phần "nhưng" mạnh hơn (ngắn hơn, ít bạo lực…) | Không |
 | 1 | Cache câu trả lời (câu trùng → 0 s, 0 đồng) | Không |
+| 1b | **Xuất DB cho khách** (`pg_dump` ~200–300 MB nén → GitHub Release / Drive + lệnh `pg_restore`) — không có thì khách phải tự viết lại 11k hồ sơ (~20 USD, vài tiếng) | Không |
 | 2 | Đóng gói Docker (API + frontend + DB + file dump dữ liệu) | Không |
-| 3 | Push git | **Link repo** |
+| 3 | ~~Push git~~ ✅ https://github.com/usermangcut-ai/cinemind (private) | — |
 | 4 | Đổi key sang nhóm "OpenAI Medium" (provider khuyên, đỡ lỗi 503) | **Có** |
 | 5 | Job tự cập nhật phim mới / trending | Không |
 | 6 | Hồ sơ cho phần còn lại (~7.700 phim lẻ, ~9.300 series) | Ngân sách (~0,17 cent/phim) |
@@ -43,7 +44,7 @@
 cd backend
 docker compose up -d                                       # DB (Docker Desktop phải mở)
 .venv/Scripts/python -m uvicorn app.main:app --port 8000    # API
-cd .. && npm run dev                                        # frontend → http://localhost:5173/chat
+cd ../frontend && npm install && npm run dev               # frontend → http://localhost:5173/chat
 
 # dữ liệu (bật WARP khi gọi TMDB)
 .venv/Scripts/python etl/fetch_tmdb.py  && .venv/Scripts/python etl/load_db.py      # phim lẻ

@@ -9,7 +9,7 @@ docker compose up -d                     # Postgres 16 + pgvector (Docker Deskto
 python -m venv .venv && .venv/Scripts/pip install -r requirements.txt
 .venv/Scripts/python -m uvicorn app.main:app --port 8000
 ```
-Frontend (thư mục gốc): `npm run dev` → http://localhost:5173/chat.
+Frontend: `cd ../frontend && npm install && npm run dev` → http://localhost:5173/chat.
 
 ## Nạp dữ liệu (lần đầu)
 Nhà mạng VN chặn `api.themoviedb.org` → **bật Cloudflare WARP** (hoặc DNS 1.1.1.1) khi chạy `fetch_tmdb.py` / `trending.py`.

@@ -1,7 +1,7 @@
 # CineMind — Thiết kế Engine gợi ý phim
 
 > Trạng thái: **đã chốt flow** (2026-10-26) · **đã build & chạy** (2026-10-27, xem `steps/` và `PROGRESS.md`). Tài liệu này là nguồn chuẩn cho phần backend/engine.
-> Frontend nối vào qua hàm `ask()` trong `src/lib/ai.js` (xem §5).
+> Frontend nối vào qua hàm `ask()` trong `frontend/src/lib/ai.js` (xem §5).
 
 ---
 
