@@ -245,6 +245,7 @@ cinemind/
 | [Thiết kế engine](docs/engine-design.md) | Từng bước, công thức điểm, hợp đồng API |
 | [Thuật ngữ](docs/glossary.md) | RRF, embedding, hồ sơ phim, từng trường dữ liệu — giải thích dễ hiểu |
 | [Nhật ký](docs/steps) | 9 bước xây dựng, mỗi bước có số liệu đo thật |
+| [Lộ trình](docs/ROADMAP.md) | Việc còn lại, ưu tiên, ước lượng, cách làm |
 | [Backend](backend/README.md) · [Frontend](frontend/README.md) | Cài đặt, ETL, cấu hình model |
 
 ---

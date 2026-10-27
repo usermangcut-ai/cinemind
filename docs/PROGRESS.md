@@ -26,7 +26,7 @@
 | Giá | ~2 cent / câu hỏi (Jev chấm 40 phim) |
 | Ngân sách provider | ~55,7 / 60 USD |
 
-## Việc còn lại
+## Việc còn lại (chi tiết + cách làm: [`ROADMAP.md`](ROADMAP.md))
 | # | Việc | Cần user? |
 |---|---|---|
 | −1 | **Chờ user:** viết hồ sơ ~800 series châu Á (CN/KR/TH…) ~1,4 USD · đăng nhập/phân quyền thật có cần không | **Có** |
