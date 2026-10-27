@@ -16,3 +16,6 @@ backend/data/
 # tài liệu bàn giao nội bộ cho AI (không đưa lên repo)
 CLAUDE.md
 AGENTS.md
+
+# kế hoạch nội bộ cho agent
+docs/plans/
