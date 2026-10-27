@@ -19,7 +19,8 @@ load_dotenv(ROOT / ".env")
 USAGE = ROOT / "data/profile_usage.jsonl"
 CONCURRENCY = 10
 # provider hay trả 429 theo đợt → mỗi lần thử lại xoay sang model dự phòng
-FALLBACK_MODELS = ["gpt-5.4-mini", "gemini-3.5-flash"]
+FALLBACK_MODELS = ["gpt-5.4-mini"]  # gemini-3.5-flash bị bỏ: provider cộng token ẩn, user không dùng
+REFUSED = [0]  # số lần liên tiếp bị provider từ chối
 
 SYSTEM = """Bạn là biên tập viên phim, viết "hồ sơ cảm nhận" cho hệ thống gợi ý phim tiếng Việt.
 Hồ sơ KHÔNG kể cốt truyện (cốt truyện đã có ở phần tóm tắt). Hồ sơ trả lời: xem phim này CẢM THẤY thế nào, hợp với ai.
@@ -75,17 +76,20 @@ async def write_profile(client, m):
             r.raise_for_status()
             data = r.json()
             d = parse_json(data["choices"][0]["message"]["content"])
+            REFUSED[0] = 0
             return to_profile(d), {"model": body["model"], **data.get("usage", {})}, time.time() - t
         except (httpx.HTTPError, KeyError, json.JSONDecodeError) as e:
             code = getattr(getattr(e, "response", None), "status_code", None)
             print(f"  lỗi id={m['id']} lần {attempt + 1}: {type(e).__name__} {code or ''}", flush=True)
-            if code in (401, 402, 403):
-                raise SystemExit("provider từ chối (hết tiền / key lỗi) → dừng")
+            if code in (401, 402, 403):  # provider hay từ chối TẠM THỜI → thử model khác; chỉ dừng khi bị từ chối liên tục
+                REFUSED[0] += 1
+                if REFUSED[0] >= 20:
+                    raise SystemExit("provider từ chối 20 lần liên tiếp (hết tiền / key lỗi) → dừng")
             await asyncio.sleep(min(30, 2 * 2 ** attempt) * (0.5 + random.random()))
     return None, {}, 0
 
 
-async def main(top, extra_ids, kind="movie", min_year=0, limit=0):
+async def main(top, extra_ids, kind="movie", min_year=0, limit=0, countries=None, order="votes"):
     with psycopg.connect(os.environ["DATABASE_URL"]) as conn:
         cur = conn.cursor(row_factory=dict_row)
         todo = cur.execute(
@@ -93,6 +97,14 @@ async def main(top, extra_ids, kind="movie", min_year=0, limit=0):
             "FROM movies WHERE profile IS NULL AND kind = %s AND (id = ANY(%s) OR id IN "
             "(SELECT id FROM movies WHERE kind = %s ORDER BY vote_count DESC NULLS LAST LIMIT %s) OR original_language = 'vi') "
             "ORDER BY vote_count DESC NULLS LAST", (kind, extra_ids, kind, top)).fetchall()
+        if countries:  # vd series châu Á: lấy theo quốc gia + độ hot (TMDB ít vote cho phim châu Á)
+            todo = cur.execute(
+                "SELECT id, title, title_vi, year, genres, runtime, director, cast_top, keywords, tagline, overview "
+                "FROM movies WHERE profile IS NULL AND kind = %s AND countries && %s "
+                "AND genres <> '{}' "  # bỏ show thực tế / talk show (thể loại TV Reality/Talk/News quy về rỗng)
+                "ORDER BY "
+                + ("popularity" if order == "popularity" else "vote_count") + " DESC NULLS LAST",
+                (kind, countries)).fetchall()
         # ưu tiên phim mới: bỏ phim trước min_year (trừ phim bắt buộc trong extra_ids)
         todo = [m for m in todo if m["id"] in extra_ids or (m["year"] or 0) >= min_year]
         if limit:
@@ -123,6 +135,8 @@ async def main(top, extra_ids, kind="movie", min_year=0, limit=0):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--top", type=int, default=50, help="N phim nhiều vote nhất (phim Việt luôn được thêm)")
+    ap.add_argument("--countries", help="vd CN,TW,HK — chỉ viết hồ sơ phim/series của các nước này")
+    ap.add_argument("--order", default="votes", choices=["votes", "popularity"])
     ap.add_argument("--min-year", type=int, default=0, help="bỏ qua phim cũ hơn năm này")
     ap.add_argument("--limit", type=int, default=0, help="viết tối đa N hồ sơ lần này")
     ap.add_argument("--kind", default="movie", choices=["movie", "tv"], help="movie = phim lẻ, tv = series")
@@ -133,4 +147,5 @@ if __name__ == "__main__":
         for q in json.loads(Path(a.ids).read_text(encoding="utf-8")):
             extra += q.get("expect_ids", []) + ([q["ref"]] if q.get("ref") else [])
     sys.stdout.reconfigure(encoding="utf-8")
-    asyncio.run(main(a.top, extra, a.kind, a.min_year, a.limit))
+    asyncio.run(main(a.top, extra, a.kind, a.min_year, a.limit,
+                     a.countries.split(",") if a.countries else None, a.order))

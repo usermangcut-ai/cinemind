@@ -10,7 +10,7 @@ _client = httpx.Client(base_url=config.LLM_BASE_URL, headers={"Authorization": f
 
 
 # provider hay lỗi 429/503 theo đợt ("No available channel") → thử lại bằng model dự phòng
-FALLBACK_MODELS = ["gpt-4.1-mini", "gemini-3.5-flash"]
+FALLBACK_MODELS = ["gpt-4.1-mini", "gpt-5.4-mini"]  # gemini-3.5-flash bị bỏ: provider cộng token ẩn, user không dùng
 
 
 class LLMError(RuntimeError):
